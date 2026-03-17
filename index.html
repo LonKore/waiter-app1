@@ -4,34 +4,40 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Waiter Pro Max</title>
+  <link rel="icon" href="data:," />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --bg: #0b1220;
-      --panel: rgba(15, 23, 42, 0.92);
-      --card: rgba(255,255,255,0.06);
-      --border: rgba(255,255,255,0.10);
+      --bg: #07111f;
+      --panel: rgba(12, 21, 39, 0.95);
+      --card: rgba(255, 255, 255, 0.06);
+      --card-2: rgba(255, 255, 255, 0.04);
+      --border: rgba(255, 255, 255, 0.10);
       --text: #f8fafc;
       --muted: #94a3b8;
-      --green: #22c55e;
+      --green: #10b981;
       --blue: #3b82f6;
       --amber: #f59e0b;
       --red: #ef4444;
       --violet: #8b5cf6;
-      --shadow: 0 20px 50px rgba(0,0,0,.35);
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
       --radius-xl: 28px;
       --radius-lg: 20px;
       --radius-md: 14px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(59,130,246,.15), transparent 24%),
-        radial-gradient(circle at top right, rgba(34,197,94,.12), transparent 22%),
-        linear-gradient(180deg, #09111d 0%, #0f172a 100%);
+        radial-gradient(circle at top left, rgba(59,130,246,.16), transparent 24%),
+        radial-gradient(circle at top right, rgba(16,185,129,.12), transparent 20%),
+        linear-gradient(180deg, #04101d 0%, #07111f 100%);
       color: var(--text);
       min-height: 100vh;
       padding: 16px;
@@ -48,46 +54,56 @@
 
     .panel {
       background: var(--panel);
-      backdrop-filter: blur(18px);
       border: 1px solid var(--border);
       border-radius: var(--radius-xl);
       box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
       overflow: hidden;
     }
 
-    .panel-body { padding: 18px; }
-    .sticky { position: sticky; top: 16px; }
+    .panel-body {
+      padding: 18px;
+    }
+
+    .sticky {
+      position: sticky;
+      top: 16px;
+    }
 
     .header-row {
       display: flex;
-      align-items: start;
       justify-content: space-between;
-      gap: 10px;
+      align-items: start;
+      gap: 12px;
       margin-bottom: 18px;
     }
 
     .title {
-      font-size: 28px;
+      font-size: 30px;
       font-weight: 900;
-      letter-spacing: -.04em;
+      letter-spacing: -0.04em;
+      line-height: 0.95;
     }
 
     .subtitle {
+      margin-top: 8px;
       color: var(--muted);
-      margin-top: 6px;
       font-size: 13px;
+      line-height: 1.4;
     }
 
-    .chip, .status-badge, .pill {
+    .chip,
+    .status-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
       border-radius: 999px;
       padding: 8px 12px;
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 800;
       border: 1px solid var(--border);
-      background: rgba(255,255,255,.06);
+      background: rgba(255,255,255,0.06);
+      white-space: nowrap;
     }
 
     .dot {
@@ -106,7 +122,15 @@
       margin-bottom: 10px;
     }
 
-    .grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
+    .muted {
+      color: var(--muted);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
 
     .stat {
       background: var(--card);
@@ -119,7 +143,7 @@
       color: var(--muted);
       font-size: 11px;
       text-transform: uppercase;
-      letter-spacing: .14em;
+      letter-spacing: .12em;
     }
 
     .stat .value {
@@ -134,13 +158,19 @@
       flex-wrap: wrap;
     }
 
-    .control-row > * { flex: 1; }
+    .control-row > * {
+      flex: 1;
+    }
 
-    input, select, textarea, button { font: inherit; }
+    input, select, textarea, button {
+      font: inherit;
+    }
 
-    .input, .select, .textarea {
+    .input,
+    .select,
+    .textarea {
       width: 100%;
-      background: rgba(255,255,255,.06);
+      background: rgba(255,255,255,0.06);
       border: 1px solid var(--border);
       color: var(--text);
       border-radius: 16px;
@@ -148,13 +178,20 @@
       outline: none;
     }
 
-    .textarea {
-      resize: vertical;
-      min-height: 80px;
+    .input::placeholder,
+    .textarea::placeholder {
+      color: #75839c;
     }
 
-    .input::placeholder, .textarea::placeholder { color: #7b8aa3; }
-    .select option { background: #0f172a; color: white; }
+    .textarea {
+      min-height: 82px;
+      resize: vertical;
+    }
+
+    .select option {
+      background: #0f172a;
+      color: #fff;
+    }
 
     .btn {
       border: none;
@@ -170,22 +207,34 @@
       gap: 8px;
     }
 
-    .btn:hover { transform: translateY(-1px); }
-    .btn:active { transform: translateY(0); }
+    .btn:hover {
+      transform: translateY(-1px);
+    }
 
-    .btn-green { background: linear-gradient(135deg, #22c55e, #16a34a); }
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-green { background: linear-gradient(135deg, #10b981, #059669); }
     .btn-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
     .btn-red { background: linear-gradient(135deg, #ef4444, #dc2626); }
-    .btn-dark { background: rgba(255,255,255,.07); border: 1px solid var(--border); }
     .btn-amber { background: linear-gradient(135deg, #f59e0b, #d97706); }
-    .btn.small { padding: 9px 12px; border-radius: 12px; font-size: 13px; }
+    .btn-dark {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--border);
+    }
+    .btn.small {
+      padding: 9px 12px;
+      border-radius: 12px;
+      font-size: 13px;
+    }
 
     .tables-wrap {
       margin-top: 14px;
       display: grid;
-      grid-template-columns: repeat(2,1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 10px;
-      max-height: 540px;
+      max-height: 560px;
       overflow: auto;
     }
 
@@ -199,45 +248,100 @@
       transition: .18s ease;
     }
 
-    .table-card:hover { transform: translateY(-2px); }
-    .table-card.active { border-color: rgba(59,130,246,.6); background: rgba(59,130,246,.14); }
+    .table-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .table-card.active {
+      border-color: rgba(59,130,246,.55);
+      background: rgba(59,130,246,.14);
+    }
 
     .table-top {
       display: flex;
       justify-content: space-between;
-      gap: 8px;
       align-items: start;
+      gap: 8px;
     }
 
-    .table-name { font-size: 18px; font-weight: 900; }
-    .table-meta { color: var(--muted); font-size: 12px; margin-top: 4px; }
-    .table-total { margin-top: 10px; color: #86efac; font-weight: 900; }
+    .table-name {
+      font-size: 18px;
+      font-weight: 900;
+    }
 
-    .status-free { color: #86efac; border-color: rgba(34,197,94,.35); background: rgba(34,197,94,.12); }
-    .status-active { color: #c4b5fd; border-color: rgba(139,92,246,.35); background: rgba(139,92,246,.12); }
-    .status-kitchen { color: #fcd34d; border-color: rgba(245,158,11,.35); background: rgba(245,158,11,.12); }
-    .status-paid { color: #93c5fd; border-color: rgba(59,130,246,.35); background: rgba(59,130,246,.12); }
+    .table-meta {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .table-total {
+      margin-top: 10px;
+      color: #86efac;
+      font-weight: 900;
+    }
+
+    .status-free {
+      color: #86efac;
+      border-color: rgba(16,185,129,.35);
+      background: rgba(16,185,129,.12);
+    }
+
+    .status-active {
+      color: #c4b5fd;
+      border-color: rgba(139,92,246,.35);
+      background: rgba(139,92,246,.12);
+    }
+
+    .status-kitchen {
+      color: #fcd34d;
+      border-color: rgba(245,158,11,.35);
+      background: rgba(245,158,11,.12);
+    }
+
+    .status-paid {
+      color: #93c5fd;
+      border-color: rgba(59,130,246,.35);
+      background: rgba(59,130,246,.12);
+    }
 
     .top-actions {
       display: flex;
       justify-content: space-between;
+      align-items: start;
       gap: 10px;
       padding: 18px 18px 0;
-      align-items: start;
     }
 
-    .top-actions h2 { font-size: 28px; line-height: 1.05; }
-    .muted { color: var(--muted); }
+    .top-actions h2 {
+      font-size: 28px;
+      line-height: 1.05;
+    }
 
-    .toolbar, .filters {
+    .tabs {
+      display: flex;
+      gap: 10px;
+    }
+
+    .tab {
+      flex: 1;
+    }
+
+    .toolbar,
+    .filters {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
       padding: 18px;
     }
 
-    .toolbar .search { flex: 1 1 260px; }
-    .filters { padding-top: 0; }
+    .filters {
+      padding-top: 0;
+    }
+
+    .toolbar .search {
+      flex: 1 1 260px;
+    }
 
     .cards-grid {
       display: grid;
@@ -262,7 +366,7 @@
       width: fit-content;
       padding: 6px 10px;
       border-radius: 999px;
-      background: rgba(255,255,255,.08);
+      background: rgba(255,255,255,0.08);
       color: #cbd5e1;
       font-size: 12px;
     }
@@ -279,35 +383,48 @@
       color: #fcd34d;
     }
 
-    .product-row { display: flex; gap: 8px; }
+    .product-row {
+      display: flex;
+      gap: 8px;
+    }
 
-    .tabs { display: flex; gap: 10px; }
-    .tab { flex: 1; }
+    .scroll {
+      max-height: 330px;
+      overflow: auto;
+    }
 
-    .order-list, .history-list {
+    .order-list,
+    .history-list {
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
 
-    .scroll { max-height: 320px; overflow: auto; }
-
-    .order-item, .history-card {
+    .order-item,
+    .history-card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 20px;
       padding: 12px;
     }
 
-    .order-item-top, .history-top {
+    .order-item-top,
+    .history-top {
       display: flex;
       justify-content: space-between;
       gap: 8px;
       align-items: start;
     }
 
-    .order-item-name { font-weight: 800; }
-    .order-item-sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
+    .order-item-name {
+      font-weight: 800;
+    }
+
+    .order-item-sub {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 4px;
+    }
 
     .qty-row {
       display: flex;
@@ -323,7 +440,7 @@
     }
 
     .summary {
-      background: linear-gradient(135deg, rgba(59,130,246,.12), rgba(34,197,94,.1));
+      background: linear-gradient(135deg, rgba(59,130,246,.12), rgba(16,185,129,.10));
       border: 1px solid var(--border);
       border-radius: 22px;
       padding: 14px;
@@ -341,7 +458,7 @@
       margin-top: 12px;
       padding-top: 12px;
       border-top: 1px solid var(--border);
-      color: white;
+      color: #fff;
       font-size: 22px;
       font-weight: 900;
     }
@@ -352,7 +469,7 @@
       padding: 28px 16px;
       border: 1px dashed var(--border);
       border-radius: 20px;
-      background: rgba(255,255,255,.03);
+      background: rgba(255,255,255,0.03);
     }
 
     .modal-backdrop {
@@ -366,7 +483,9 @@
       padding: 18px;
     }
 
-    .modal-backdrop.open { display: flex; }
+    .modal-backdrop.open {
+      display: flex;
+    }
 
     .modal {
       width: 100%;
@@ -396,8 +515,8 @@
     .modal-actions {
       padding: 0 18px 18px;
       display: flex;
-      gap: 10px;
       justify-content: flex-end;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
@@ -422,23 +541,60 @@
     }
 
     @media (max-width: 1200px) {
-      .app { grid-template-columns: 300px 1fr; }
-      .right-col { grid-column: 1 / -1; }
-      .sticky { position: static; }
+      .app {
+        grid-template-columns: 300px 1fr;
+      }
+
+      .right-col {
+        grid-column: 1 / -1;
+      }
+
+      .sticky {
+        position: static;
+      }
     }
 
     @media (max-width: 860px) {
-      .app { grid-template-columns: 1fr; }
-      .tables-wrap { grid-template-columns: repeat(3,1fr); max-height: none; }
-      .cards-grid { max-height: none; }
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .tables-wrap {
+        grid-template-columns: repeat(3, 1fr);
+        max-height: none;
+      }
+
+      .cards-grid {
+        max-height: none;
+      }
     }
 
     @media (max-width: 560px) {
-      body { padding: 10px; }
-      .tables-wrap, .grid-2 { grid-template-columns: repeat(2,1fr); }
-      .cards-grid { grid-template-columns: repeat(2,1fr); padding: 0 12px 12px; }
-      .panel-body, .toolbar, .filters, .top-actions { padding-left: 12px; padding-right: 12px; }
-      .top-actions { flex-direction: column; }
+      body {
+        padding: 10px;
+      }
+
+      .tables-wrap,
+      .grid-2 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 0 12px 12px;
+      }
+
+      .panel-body,
+      .toolbar,
+      .filters,
+      .top-actions {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .top-actions {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
@@ -448,7 +604,7 @@
       <div class="panel-body">
         <div class="header-row">
           <div>
-            <div class="title">Waiter Pro Max</div>
+            <div class="title">Waiter<br>Pro Max</div>
             <div class="subtitle">HTML + Supabase</div>
           </div>
           <div id="dbStatus" class="chip"><span class="dot"></span>Подключение...</div>
@@ -458,16 +614,19 @@
 
         <div style="margin-top:16px;">
           <div class="label">Столы</div>
+
           <div class="control-row">
             <input id="newTableName" class="input" placeholder="Новый стол" />
             <button id="addTableBtn" class="btn btn-blue">Добавить</button>
           </div>
+
           <div class="control-row" style="margin-top:10px;">
             <select id="zoneFilter" class="select">
               <option>Все зоны</option>
             </select>
             <button id="toggleFreeOnlyBtn" class="btn btn-dark">Все столы</button>
           </div>
+
           <div id="tablesWrap" class="tables-wrap"></div>
         </div>
       </div>
@@ -478,8 +637,9 @@
         <div>
           <div class="label">Меню</div>
           <h2 id="centerTitle">Выбери стол</h2>
-          <div class="muted" id="centerSubtitle">Добавляй товары одним нажатием</div>
+          <div id="centerSubtitle" class="muted">Добавляй товары одним нажатием</div>
         </div>
+
         <div class="tabs">
           <button class="btn btn-blue tab" data-tab="order">Заказ</button>
           <button class="btn btn-dark tab" data-tab="history">История</button>
@@ -491,6 +651,7 @@
           <input id="productSearch" class="input search" placeholder="Поиск товара" />
           <button id="openProductModalBtn" class="btn btn-green">+ Товар</button>
         </div>
+
         <div id="categoryFilters" class="filters"></div>
         <div id="productsGrid" class="cards-grid"></div>
       </div>
@@ -500,6 +661,7 @@
           <input id="historySearch" class="input search" placeholder="Поиск по истории" />
           <button id="clearHistoryBtn" class="btn btn-red">Очистить историю</button>
         </div>
+
         <div class="panel-body" style="padding-top:0;">
           <div id="historyList" class="history-list scroll"></div>
         </div>
@@ -511,7 +673,7 @@
         <div class="header-row" style="margin-bottom:14px;">
           <div>
             <div class="label">Текущий заказ</div>
-            <div class="title" style="font-size:24px;" id="orderTitle">Стол не выбран</div>
+            <div id="orderTitle" class="title" style="font-size:24px;">Стол не выбран</div>
           </div>
           <div id="orderStatus" class="status-badge status-free">Свободен</div>
         </div>
@@ -519,9 +681,10 @@
         <div class="control-row" style="margin-bottom:10px;">
           <input id="guestName" class="input" placeholder="Имя гостя / бронь" />
         </div>
+
         <textarea id="orderNote" class="textarea" placeholder="Комментарий к заказу"></textarea>
 
-        <div style="margin-top:14px; margin-bottom:14px;" class="scroll">
+        <div class="scroll" style="margin-top:14px; margin-bottom:14px;">
           <div id="orderList" class="order-list"></div>
         </div>
 
@@ -546,6 +709,7 @@
           <button id="transferBtn" class="btn btn-dark">Перенести</button>
           <button id="clearOrderBtn" class="btn btn-red">Очистить</button>
         </div>
+
         <button id="closeOrderBtn" class="btn btn-green" style="width:100%; margin-top:12px;">Закрыть заказ</button>
       </div>
     </section>
@@ -565,7 +729,10 @@
           <option>Напитки</option>
           <option>Пиво</option>
         </select>
-        <label class="pill"><input id="productPopular" type="checkbox" /> Популярный товар</label>
+        <label class="status-badge">
+          <input id="productPopular" type="checkbox" />
+          Популярный товар
+        </label>
       </div>
       <div class="modal-actions">
         <button class="btn btn-dark" data-close="productModal">Отмена</button>
@@ -590,14 +757,14 @@
     </div>
   </div>
 
-  <div class="toast-wrap" id="toastWrap"></div>
+  <div id="toastWrap" class="toast-wrap"></div>
 
   <script>
     const SUPABASE_URL = 'https://kihqjwqyiajsqburfseb.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_B95AUpkoWKAL6KuPZdYCHQ_bcN4cEAY';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const LOCAL_KEY = 'waiter_pro_max_supabase_fallback_v2';
+    const LOCAL_KEY = 'waiter_pro_max_fallback_v3';
 
     const initialState = {
       tables: [
@@ -622,18 +789,21 @@
       ],
       orders: {},
       history: [],
-      settings: { servicePercent: 0, showOnlyFree: false },
+      settings: {
+        servicePercent: 0,
+        showOnlyFree: false
+      },
       selectedTableId: 't1'
     };
 
     let state = loadLocal();
+    let dbReady = false;
     let activeTab = 'order';
     let productSearch = '';
     let historySearch = '';
     let categoryFilter = 'Все';
     let zoneFilter = 'Все зоны';
     let editingProductId = null;
-    let dbReady = false;
 
     const els = {
       statsBox: document.getElementById('statsBox'),
@@ -643,11 +813,14 @@
       toggleFreeOnlyBtn: document.getElementById('toggleFreeOnlyBtn'),
       newTableName: document.getElementById('newTableName'),
       addTableBtn: document.getElementById('addTableBtn'),
+
       centerTitle: document.getElementById('centerTitle'),
       centerSubtitle: document.getElementById('centerSubtitle'),
+
       productSearch: document.getElementById('productSearch'),
       categoryFilters: document.getElementById('categoryFilters'),
       productsGrid: document.getElementById('productsGrid'),
+
       orderTitle: document.getElementById('orderTitle'),
       orderStatus: document.getElementById('orderStatus'),
       guestName: document.getElementById('guestName'),
@@ -657,16 +830,20 @@
       sumCount: document.getElementById('sumCount'),
       sumSubtotal: document.getElementById('sumSubtotal'),
       sumTotal: document.getElementById('sumTotal'),
+
       kitchenBtn: document.getElementById('kitchenBtn'),
       paidBtn: document.getElementById('paidBtn'),
       transferBtn: document.getElementById('transferBtn'),
       clearOrderBtn: document.getElementById('clearOrderBtn'),
       closeOrderBtn: document.getElementById('closeOrderBtn'),
+
       historySearch: document.getElementById('historySearch'),
       historyList: document.getElementById('historyList'),
       clearHistoryBtn: document.getElementById('clearHistoryBtn'),
+
       orderTab: document.getElementById('orderTab'),
       historyTab: document.getElementById('historyTab'),
+
       openProductModalBtn: document.getElementById('openProductModalBtn'),
       productModal: document.getElementById('productModal'),
       productModalTitle: document.getElementById('productModalTitle'),
@@ -675,9 +852,11 @@
       productCategory: document.getElementById('productCategory'),
       productPopular: document.getElementById('productPopular'),
       saveProductBtn: document.getElementById('saveProductBtn'),
+
       transferModal: document.getElementById('transferModal'),
       transferTarget: document.getElementById('transferTarget'),
       confirmTransferBtn: document.getElementById('confirmTransferBtn'),
+
       toastWrap: document.getElementById('toastWrap')
     };
 
@@ -692,8 +871,7 @@
     function loadLocal() {
       try {
         const raw = localStorage.getItem(LOCAL_KEY);
-        const parsed = raw ? JSON.parse(raw) : clone(initialState);
-        return parsed;
+        return raw ? JSON.parse(raw) : clone(initialState);
       } catch {
         return clone(initialState);
       }
@@ -707,8 +885,42 @@
       return prefix + '_' + Math.random().toString(36).slice(2, 11);
     }
 
-    function rub(v) {
-      return Number(v || 0).toLocaleString('ru-RU') + ' ₽';
+    function rub(value) {
+      return Number(value || 0).toLocaleString('ru-RU') + ' ₽';
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function toast(text) {
+      const el = document.createElement('div');
+      el.className = 'toast';
+      el.textContent = text;
+      els.toastWrap.appendChild(el);
+      setTimeout(() => el.remove(), 2600);
+    }
+
+    function debounce(fn, delay) {
+      let timer;
+      return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn(...args), delay);
+      };
+    }
+
+    function formatDate(iso) {
+      return new Intl.DateTimeFormat('ru-RU', {
+        day: '2-digit',
+        month: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      }).format(new Date(iso));
     }
 
     function currentTable() {
@@ -716,7 +928,16 @@
     }
 
     function ensureCurrentOrder() {
-      if (!state.selectedTableId) return { items: [], paid: false, sentToKitchen: false, guestName: '', note: '' };
+      if (!state.selectedTableId) {
+        return {
+          items: [],
+          paid: false,
+          sentToKitchen: false,
+          guestName: '',
+          note: ''
+        };
+      }
+
       if (!state.orders[state.selectedTableId]) {
         state.orders[state.selectedTableId] = {
           items: [],
@@ -726,10 +947,11 @@
           note: ''
         };
       }
+
       return state.orders[state.selectedTableId];
     }
 
-    function orderStatus(order) {
+    function getOrderStatus(order) {
       if (!order || !order.items.length) return { text: 'Свободен', cls: 'status-free' };
       if (order.paid) return { text: 'Оплачен', cls: 'status-paid' };
       if (order.sentToKitchen) return { text: 'Готовится', cls: 'status-kitchen' };
@@ -738,9 +960,11 @@
 
     function bind() {
       els.addTableBtn.addEventListener('click', addTable);
-      els.newTableName.addEventListener('keydown', e => e.key === 'Enter' && addTable());
+      els.newTableName.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') addTable();
+      });
 
-      els.zoneFilter.addEventListener('change', e => {
+      els.zoneFilter.addEventListener('change', (e) => {
         zoneFilter = e.target.value;
         renderTables();
       });
@@ -752,37 +976,39 @@
         els.toggleFreeOnlyBtn.textContent = state.settings.showOnlyFree ? 'Только свободные' : 'Все столы';
       });
 
-      document.querySelectorAll('.tab').forEach(btn => {
+      document.querySelectorAll('.tab').forEach((btn) => {
         btn.addEventListener('click', () => {
-          activeTab = btn.dataset.tab;
-          document.querySelectorAll('.tab').forEach(x => x.className = 'btn btn-dark tab');
+          activeTab = btn.getAttribute('data-tab');
+          document.querySelectorAll('.tab').forEach((x) => {
+            x.className = 'btn btn-dark tab';
+          });
           btn.className = 'btn btn-blue tab';
           els.orderTab.style.display = activeTab === 'order' ? '' : 'none';
           els.historyTab.style.display = activeTab === 'history' ? '' : 'none';
         });
       });
 
-      els.productSearch.addEventListener('input', e => {
-        productSearch = e.target.value.toLowerCase();
+      els.productSearch.addEventListener('input', (e) => {
+        productSearch = e.target.value.toLowerCase().trim();
         renderProducts();
       });
 
-      els.historySearch.addEventListener('input', e => {
-        historySearch = e.target.value.toLowerCase();
+      els.historySearch.addEventListener('input', (e) => {
+        historySearch = e.target.value.toLowerCase().trim();
         renderHistory();
       });
 
-      els.guestName.addEventListener('input', debounce(async e => {
+      els.guestName.addEventListener('input', debounce(async (e) => {
         ensureCurrentOrder().guestName = e.target.value;
         await upsertOrder(state.selectedTableId);
       }, 350));
 
-      els.orderNote.addEventListener('input', debounce(async e => {
+      els.orderNote.addEventListener('input', debounce(async (e) => {
         ensureCurrentOrder().note = e.target.value;
         await upsertOrder(state.selectedTableId);
       }, 350));
 
-      els.servicePercent.addEventListener('change', async e => {
+      els.servicePercent.addEventListener('change', async (e) => {
         state.settings.servicePercent = Number(e.target.value);
         await persistSettings();
         renderOrder();
@@ -809,18 +1035,19 @@
       els.closeOrderBtn.addEventListener('click', closeOrder);
       els.transferBtn.addEventListener('click', openTransferModal);
       els.confirmTransferBtn.addEventListener('click', transferOrder);
+
       els.clearHistoryBtn.addEventListener('click', clearHistory);
 
       els.openProductModalBtn.addEventListener('click', () => openProductModal());
       els.saveProductBtn.addEventListener('click', saveProduct);
 
-      document.querySelectorAll('[data-close]').forEach(btn => {
+      document.querySelectorAll('[data-close]').forEach((btn) => {
         btn.addEventListener('click', () => {
-          document.getElementById(btn.dataset.close).classList.remove('open');
+          document.getElementById(btn.getAttribute('data-close')).classList.remove('open');
         });
       });
 
-      window.addEventListener('click', e => {
+      window.addEventListener('click', (e) => {
         if (e.target.classList.contains('modal-backdrop')) {
           e.target.classList.remove('open');
         }
@@ -835,8 +1062,9 @@
         if (!ok) {
           dbReady = false;
           setDbStatus('Локальный режим');
-          if (!state.tables?.length) state.tables = clone(initialState.tables);
-          if (!state.products?.length) state.products = clone(initialState.products);
+          state = loadLocal();
+          if (!state.tables.length) state.tables = clone(initialState.tables);
+          if (!state.products.length) state.products = clone(initialState.products);
           if (!state.selectedTableId) state.selectedTableId = state.tables[0]?.id || null;
           saveLocal();
           renderAll();
@@ -849,12 +1077,13 @@
         await bootstrapDataIfEmpty();
         await loadFromSupabase();
         setupRealtime();
-      } catch (e) {
-        console.error('initSupabase error:', e);
+      } catch (error) {
+        console.error('initSupabase error:', error);
         dbReady = false;
         setDbStatus('Ошибка базы');
-        if (!state.tables?.length) state.tables = clone(initialState.tables);
-        if (!state.products?.length) state.products = clone(initialState.products);
+        state = loadLocal();
+        if (!state.tables.length) state.tables = clone(initialState.tables);
+        if (!state.products.length) state.products = clone(initialState.products);
         if (!state.selectedTableId) state.selectedTableId = state.tables[0]?.id || null;
         saveLocal();
         renderAll();
@@ -869,13 +1098,13 @@
     async function ensureSchema() {
       try {
         const checks = await Promise.all([
-          supabase.from('wp_tables').select('id').limit(1),
-          supabase.from('wp_products').select('id').limit(1),
-          supabase.from('wp_orders').select('table_id').limit(1),
-          supabase.from('wp_history').select('id').limit(1),
-          supabase.from('wp_settings').select('id').limit(1)
+          sb.from('wp_tables').select('id').limit(1),
+          sb.from('wp_products').select('id').limit(1),
+          sb.from('wp_orders').select('table_id').limit(1),
+          sb.from('wp_history').select('id').limit(1),
+          sb.from('wp_settings').select('id').limit(1)
         ]);
-        return checks.every(result => !result.error);
+        return checks.every((x) => !x.error);
       } catch {
         return false;
       }
@@ -883,20 +1112,25 @@
 
     async function bootstrapDataIfEmpty() {
       const [{ count: tablesCount }, { count: productsCount }, settingsRes] = await Promise.all([
-        supabase.from('wp_tables').select('*', { count: 'exact', head: true }),
-        supabase.from('wp_products').select('*', { count: 'exact', head: true }),
-        supabase.from('wp_settings').select('*').eq('id', 'main').maybeSingle()
+        sb.from('wp_tables').select('*', { count: 'exact', head: true }),
+        sb.from('wp_products').select('*', { count: 'exact', head: true }),
+        sb.from('wp_settings').select('*').eq('id', 'main').maybeSingle()
       ]);
 
       if ((tablesCount ?? 0) === 0) {
-        await supabase.from('wp_tables').insert(
-          initialState.tables.map(t => ({ id: t.id, name: t.name, zone: t.zone, seats: t.seats }))
+        await sb.from('wp_tables').insert(
+          initialState.tables.map((t) => ({
+            id: t.id,
+            name: t.name,
+            zone: t.zone,
+            seats: t.seats
+          }))
         );
       }
 
       if ((productsCount ?? 0) === 0) {
-        await supabase.from('wp_products').insert(
-          initialState.products.map(p => ({
+        await sb.from('wp_products').insert(
+          initialState.products.map((p) => ({
             id: p.id,
             name: p.name,
             price: p.price,
@@ -907,7 +1141,7 @@
       }
 
       if (!settingsRes.data) {
-        await supabase.from('wp_settings').upsert(
+        await sb.from('wp_settings').upsert(
           [{ id: 'main', service_percent: 0, show_only_free: false }],
           { onConflict: 'id' }
         );
@@ -923,25 +1157,25 @@
           { data: history, error: historyErr },
           { data: settings, error: settingsErr }
         ] = await Promise.all([
-          supabase.from('wp_tables').select('*').order('name'),
-          supabase.from('wp_products').select('*').order('name'),
-          supabase.from('wp_orders').select('*'),
-          supabase.from('wp_history').select('*').order('created_at', { ascending: false }),
-          supabase.from('wp_settings').select('*').eq('id', 'main').maybeSingle()
+          sb.from('wp_tables').select('*').order('name'),
+          sb.from('wp_products').select('*').order('name'),
+          sb.from('wp_orders').select('*'),
+          sb.from('wp_history').select('*').order('created_at', { ascending: false }),
+          sb.from('wp_settings').select('*').eq('id', 'main').maybeSingle()
         ]);
 
         if (tablesErr || productsErr || ordersErr || historyErr || settingsErr) {
           throw new Error('Ошибка чтения данных из Supabase');
         }
 
-        state.tables = (tables || []).map(t => ({
+        state.tables = (tables || []).map((t) => ({
           id: t.id,
           name: t.name,
           zone: t.zone || 'Зал',
           seats: t.seats || 4
         }));
 
-        state.products = (products || []).map(p => ({
+        state.products = (products || []).map((p) => ({
           id: p.id,
           name: p.name,
           price: p.price || 0,
@@ -953,7 +1187,7 @@
         if (!state.products.length) state.products = clone(initialState.products);
 
         state.orders = {};
-        (orders || []).forEach(o => {
+        (orders || []).forEach((o) => {
           state.orders[o.table_id] = {
             items: Array.isArray(o.items) ? o.items : [],
             paid: !!o.paid,
@@ -963,7 +1197,7 @@
           };
         });
 
-        state.history = (history || []).map(h => ({
+        state.history = (history || []).map((h) => ({
           id: h.id,
           tableId: h.table_id,
           tableName: h.table_name,
@@ -979,18 +1213,18 @@
           state.settings.showOnlyFree = !!settings.show_only_free;
         }
 
-        if (!state.selectedTableId || !state.tables.some(t => t.id === state.selectedTableId)) {
+        if (!state.selectedTableId || !state.tables.some((t) => t.id === state.selectedTableId)) {
           state.selectedTableId = state.tables[0]?.id || null;
         }
 
         saveLocal();
         renderAll();
-      } catch (e) {
-        console.error('loadFromSupabase error:', e);
+      } catch (error) {
+        console.error('loadFromSupabase error:', error);
         dbReady = false;
         setDbStatus('Ошибка базы');
-        if (!state.tables?.length) state.tables = clone(initialState.tables);
-        if (!state.products?.length) state.products = clone(initialState.products);
+        if (!state.tables.length) state.tables = clone(initialState.tables);
+        if (!state.products.length) state.products = clone(initialState.products);
         if (!state.selectedTableId) state.selectedTableId = state.tables[0]?.id || null;
         saveLocal();
         renderAll();
@@ -999,8 +1233,7 @@
     }
 
     function setupRealtime() {
-      supabase
-        .channel('wp-live')
+      sb.channel('waiter-live')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'wp_tables' }, () => loadFromSupabase())
         .on('postgres_changes', { event: '*', schema: 'public', table: 'wp_products' }, () => loadFromSupabase())
         .on('postgres_changes', { event: '*', schema: 'public', table: 'wp_orders' }, () => loadFromSupabase())
@@ -1012,7 +1245,8 @@
     async function persistSettings() {
       saveLocal();
       if (!dbReady) return;
-      await supabase.from('wp_settings').upsert(
+
+      await sb.from('wp_settings').upsert(
         [{
           id: 'main',
           service_percent: state.settings.servicePercent || 0,
@@ -1024,7 +1258,7 @@
 
     async function upsertOrder(tableId) {
       saveLocal();
-      if (!dbReady) return;
+      if (!dbReady || !tableId) return;
 
       const order = state.orders[tableId] || {
         items: [],
@@ -1035,11 +1269,11 @@
       };
 
       if (!order.items.length && !order.guestName && !order.note && !order.paid && !order.sentToKitchen) {
-        await supabase.from('wp_orders').delete().eq('table_id', tableId);
+        await sb.from('wp_orders').delete().eq('table_id', tableId);
         return;
       }
 
-      await supabase.from('wp_orders').upsert(
+      await sb.from('wp_orders').upsert(
         [{
           table_id: tableId,
           items: order.items,
@@ -1065,11 +1299,11 @@
     }
 
     function renderStats() {
-      const active = Object.values(state.orders).filter(o => o && o.items && o.items.length).length;
+      const activeOrders = Object.values(state.orders).filter((o) => o && o.items && o.items.length).length;
       const html = [
         ['Столов', state.tables.length],
         ['Товаров', state.products.length],
-        ['Активных', active],
+        ['Активных', activeOrders],
         ['История', state.history.length]
       ].map(([name, value]) => `
         <div class="stat">
@@ -1081,22 +1315,25 @@
     }
 
     function renderZoneFilter() {
-      const zones = ['Все зоны', ...new Set(state.tables.map(t => t.zone))];
-      els.zoneFilter.innerHTML = zones.map(z => `<option ${z === zoneFilter ? 'selected' : ''}>${z}</option>`).join('');
+      const zones = ['Все зоны', ...new Set(state.tables.map((t) => t.zone))];
+      els.zoneFilter.innerHTML = zones.map((z) => `<option ${z === zoneFilter ? 'selected' : ''}>${z}</option>`).join('');
     }
 
     function renderTables() {
-      let tables = state.tables.filter(t => zoneFilter === 'Все зоны' || t.zone === zoneFilter);
+      let tables = state.tables.filter((t) => zoneFilter === 'Все зоны' || t.zone === zoneFilter);
 
       if (state.settings.showOnlyFree) {
-        tables = tables.filter(t => !(state.orders[t.id] && state.orders[t.id].items && state.orders[t.id].items.length));
+        tables = tables.filter((t) => {
+          const order = state.orders[t.id];
+          return !(order && order.items && order.items.length);
+        });
       }
 
-      els.tablesWrap.innerHTML = tables.map(table => {
+      els.tablesWrap.innerHTML = tables.map((table) => {
         const order = state.orders[table.id] || { items: [] };
-        const status = orderStatus(order);
-        const total = (order.items || []).reduce((s, i) => s + i.price * i.qty, 0);
-        const count = (order.items || []).reduce((s, i) => s + i.qty, 0);
+        const status = getOrderStatus(order);
+        const total = (order.items || []).reduce((sum, item) => sum + item.price * item.qty, 0);
+        const count = (order.items || []).reduce((sum, item) => sum + item.qty, 0);
 
         return `
           <button class="table-card ${table.id === state.selectedTableId ? 'active' : ''}" data-table="${table.id}">
@@ -1113,9 +1350,9 @@
         `;
       }).join('') || '<div class="empty" style="grid-column:1/-1;">Нет столов по фильтру</div>';
 
-      els.tablesWrap.querySelectorAll('[data-table]').forEach(btn => {
+      els.tablesWrap.querySelectorAll('[data-table]').forEach((btn) => {
         btn.addEventListener('click', () => {
-          state.selectedTableId = btn.dataset.table;
+          state.selectedTableId = btn.getAttribute('data-table');
           saveLocal();
           renderTables();
           renderOrder();
@@ -1124,16 +1361,16 @@
     }
 
     function renderCategories() {
-      const categories = ['Все', ...new Set(state.products.map(p => p.category))];
-      els.categoryFilters.innerHTML = categories.map(cat => `
-        <button class="btn ${cat === categoryFilter ? 'btn-blue' : 'btn-dark'} small filter-btn" data-cat="${cat}">
+      const categories = ['Все', ...new Set(state.products.map((p) => p.category))];
+      els.categoryFilters.innerHTML = categories.map((cat) => `
+        <button class="btn ${cat === categoryFilter ? 'btn-blue' : 'btn-dark'} small" data-cat="${cat}">
           ${escapeHtml(cat)}
         </button>
       `).join('');
 
-      els.categoryFilters.querySelectorAll('[data-cat]').forEach(btn => {
+      els.categoryFilters.querySelectorAll('[data-cat]').forEach((btn) => {
         btn.addEventListener('click', () => {
-          categoryFilter = btn.dataset.cat;
+          categoryFilter = btn.getAttribute('data-cat');
           renderCategories();
           renderProducts();
         });
@@ -1141,13 +1378,13 @@
     }
 
     function renderProducts() {
-      const products = state.products.filter(p => {
-        const okSearch = !productSearch || p.name.toLowerCase().includes(productSearch);
-        const okCat = categoryFilter === 'Все' || p.category === categoryFilter;
-        return okSearch && okCat;
+      const filtered = state.products.filter((p) => {
+        const matchesSearch = !productSearch || p.name.toLowerCase().includes(productSearch);
+        const matchesCategory = categoryFilter === 'Все' || p.category === categoryFilter;
+        return matchesSearch && matchesCategory;
       });
 
-      els.productsGrid.innerHTML = products.map(product => `
+      els.productsGrid.innerHTML = filtered.map((product) => `
         <div class="product-card">
           <div class="product-category">${escapeHtml(product.category)}${product.popular ? ' • ★' : ''}</div>
           <div class="product-name">${escapeHtml(product.name)}</div>
@@ -1160,23 +1397,23 @@
         </div>
       `).join('') || '<div class="empty" style="grid-column:1/-1;">Товары не найдены</div>';
 
-      els.productsGrid.querySelectorAll('[data-add-product]').forEach(btn => {
-        btn.addEventListener('click', () => addProductToOrder(btn.dataset.add-product || btn.dataset.addProduct));
+      els.productsGrid.querySelectorAll('[data-add-product]').forEach((btn) => {
+        btn.addEventListener('click', () => addProductToOrder(btn.getAttribute('data-add-product')));
       });
 
-      els.productsGrid.querySelectorAll('[data-edit-product]').forEach(btn => {
-        btn.addEventListener('click', () => openProductModal(btn.dataset.editProduct));
+      els.productsGrid.querySelectorAll('[data-edit-product]').forEach((btn) => {
+        btn.addEventListener('click', () => openProductModal(btn.getAttribute('data-edit-product')));
       });
 
-      els.productsGrid.querySelectorAll('[data-del-product]').forEach(btn => {
-        btn.addEventListener('click', () => deleteProduct(btn.dataset.delProduct));
+      els.productsGrid.querySelectorAll('[data-del-product]').forEach((btn) => {
+        btn.addEventListener('click', () => deleteProduct(btn.getAttribute('data-del-product')));
       });
     }
 
     function renderOrder() {
       const table = currentTable();
       const order = ensureCurrentOrder();
-      const status = orderStatus(order);
+      const status = getOrderStatus(order);
 
       els.orderTitle.textContent = table ? 'Стол ' + table.name : 'Стол не выбран';
       els.orderStatus.className = 'status-badge ' + status.cls;
@@ -1189,7 +1426,7 @@
       if (!order.items.length) {
         els.orderList.innerHTML = '<div class="empty">Заказ пуст. Добавь товары из меню.</div>';
       } else {
-        els.orderList.innerHTML = order.items.map(item => `
+        els.orderList.innerHTML = order.items.map((item) => `
           <div class="order-item">
             <div class="order-item-top">
               <div>
@@ -1206,17 +1443,17 @@
           </div>
         `).join('');
 
-        els.orderList.querySelectorAll('[data-inc]').forEach(btn => {
-          btn.addEventListener('click', () => changeQty(btn.dataset.inc, 1));
+        els.orderList.querySelectorAll('[data-inc]').forEach((btn) => {
+          btn.addEventListener('click', () => changeQty(btn.getAttribute('data-inc'), 1));
         });
 
-        els.orderList.querySelectorAll('[data-dec]').forEach(btn => {
-          btn.addEventListener('click', () => changeQty(btn.dataset.dec, -1));
+        els.orderList.querySelectorAll('[data-dec]').forEach((btn) => {
+          btn.addEventListener('click', () => changeQty(btn.getAttribute('data-dec'), -1));
         });
       }
 
-      const count = order.items.reduce((s, i) => s + i.qty, 0);
-      const subtotal = order.items.reduce((s, i) => s + i.price * i.qty, 0);
+      const count = order.items.reduce((sum, item) => sum + item.qty, 0);
+      const subtotal = order.items.reduce((sum, item) => sum + item.price * item.qty, 0);
       const total = subtotal + Math.round(subtotal * ((state.settings.servicePercent || 0) / 100));
 
       els.sumCount.textContent = count;
@@ -1228,12 +1465,12 @@
     }
 
     function renderHistory() {
-      const items = state.history.filter(entry => {
-        const text = [entry.tableName, entry.guestName || '', ...entry.items.map(i => i.name)].join(' ').toLowerCase();
-        return !historySearch || text.includes(historySearch);
+      const filtered = state.history.filter((entry) => {
+        const hay = [entry.tableName, entry.guestName || '', ...entry.items.map((i) => i.name)].join(' ').toLowerCase();
+        return !historySearch || hay.includes(historySearch);
       });
 
-      els.historyList.innerHTML = items.map(entry => `
+      els.historyList.innerHTML = filtered.map((entry) => `
         <div class="history-card">
           <div class="history-top">
             <div>
@@ -1244,7 +1481,7 @@
           </div>
 
           <div style="margin-top:10px; display:flex; flex-direction:column; gap:6px;">
-            ${entry.items.map(item => `
+            ${entry.items.map((item) => `
               <div class="order-item-sub" style="display:flex; justify-content:space-between; gap:8px;">
                 <span>${escapeHtml(item.name)} × ${item.qty}</span>
                 <strong>${rub(item.price * item.qty)}</strong>
@@ -1261,27 +1498,39 @@
         </div>
       `).join('') || '<div class="empty">История пока пустая</div>';
 
-      els.historyList.querySelectorAll('[data-repeat]').forEach(btn => {
-        btn.addEventListener('click', () => repeatHistory(btn.dataset.repeat));
+      els.historyList.querySelectorAll('[data-repeat]').forEach((btn) => {
+        btn.addEventListener('click', () => repeatHistory(btn.getAttribute('data-repeat')));
       });
 
-      els.historyList.querySelectorAll('[data-del-history]').forEach(btn => {
-        btn.addEventListener('click', () => deleteHistory(btn.dataset.delHistory));
+      els.historyList.querySelectorAll('[data-del-history]').forEach((btn) => {
+        btn.addEventListener('click', () => deleteHistory(btn.getAttribute('data-del-history')));
       });
     }
 
     async function addTable() {
       const name = els.newTableName.value.trim();
-      if (!name) return toast('Введите название стола');
+      if (!name) {
+        toast('Введите название стола');
+        return;
+      }
 
-      const table = { id: uid('t'), name, zone: 'Зал', seats: 4 };
+      const table = {
+        id: uid('t'),
+        name,
+        zone: 'Зал',
+        seats: 4
+      };
+
       state.tables.push(table);
       els.newTableName.value = '';
       saveLocal();
 
       if (dbReady) {
-        const { error } = await supabase.from('wp_tables').insert([table]);
-        if (error) toast('Ошибка сохранения стола');
+        const { error } = await sb.from('wp_tables').insert([table]);
+        if (error) {
+          console.error(error);
+          toast('Ошибка сохранения стола');
+        }
       }
 
       renderZoneFilter();
@@ -1291,14 +1540,15 @@
     }
 
     async function addProductToOrder(productId) {
-      const product = state.products.find(p => p.id === productId);
+      const product = state.products.find((p) => p.id === productId);
       if (!product) return;
 
       const order = ensureCurrentOrder();
-      const existing = order.items.find(i => i.productId === productId);
+      const existing = order.items.find((i) => i.productId === productId);
 
-      if (existing) existing.qty += 1;
-      else {
+      if (existing) {
+        existing.qty += 1;
+      } else {
         order.items.push({
           productId,
           name: product.name,
@@ -1316,11 +1566,11 @@
 
     async function changeQty(productId, diff) {
       const order = ensureCurrentOrder();
-      const item = order.items.find(i => i.productId === productId);
+      const item = order.items.find((i) => i.productId === productId);
       if (!item) return;
 
       item.qty += diff;
-      order.items = order.items.filter(i => i.qty > 0);
+      order.items = order.items.filter((i) => i.qty > 0);
 
       await upsertOrder(state.selectedTableId);
       renderOrder();
@@ -1328,7 +1578,11 @@
 
     async function clearOrder() {
       const order = ensureCurrentOrder();
-      if (!order.items.length) return toast('Заказ уже пустой');
+      if (!order.items.length) {
+        toast('Заказ уже пустой');
+        return;
+      }
+
       if (!confirm('Очистить заказ?')) return;
 
       state.orders[state.selectedTableId] = {
@@ -1348,12 +1602,15 @@
       const table = currentTable();
       const order = ensureCurrentOrder();
 
-      if (!table || !order.items.length) return toast('Заказ пустой');
+      if (!table || !order.items.length) {
+        toast('Заказ пустой');
+        return;
+      }
 
-      const subtotal = order.items.reduce((s, i) => s + i.price * i.qty, 0);
+      const subtotal = order.items.reduce((sum, item) => sum + item.price * item.qty, 0);
       const total = subtotal + Math.round(subtotal * ((state.settings.servicePercent || 0) / 100));
 
-      const historyItemDb = {
+      const historyDb = {
         id: uid('h'),
         table_id: table.id,
         table_name: table.name,
@@ -1365,14 +1622,14 @@
       };
 
       state.history.unshift({
-        id: historyItemDb.id,
-        tableId: historyItemDb.table_id,
-        tableName: historyItemDb.table_name,
-        guestName: historyItemDb.guest_name,
-        note: historyItemDb.note,
-        createdAt: historyItemDb.created_at,
-        items: historyItemDb.items,
-        total: historyItemDb.total
+        id: historyDb.id,
+        tableId: historyDb.table_id,
+        tableName: historyDb.table_name,
+        guestName: historyDb.guest_name,
+        note: historyDb.note,
+        createdAt: historyDb.created_at,
+        items: historyDb.items,
+        total: historyDb.total
       });
 
       state.orders[state.selectedTableId] = {
@@ -1386,8 +1643,11 @@
       saveLocal();
 
       if (dbReady) {
-        await supabase.from('wp_history').insert([historyItemDb]);
-        await supabase.from('wp_orders').delete().eq('table_id', state.selectedTableId);
+        const insertRes = await sb.from('wp_history').insert([historyDb]);
+        const deleteRes = await sb.from('wp_orders').delete().eq('table_id', state.selectedTableId);
+
+        if (insertRes.error) console.error(insertRes.error);
+        if (deleteRes.error) console.error(deleteRes.error);
       }
 
       renderOrder();
@@ -1399,15 +1659,18 @@
 
     function openTransferModal() {
       const order = ensureCurrentOrder();
-      if (!order.items.length) return toast('Нечего переносить');
+      if (!order.items.length) {
+        toast('Нечего переносить');
+        return;
+      }
 
       els.transferTarget.innerHTML = state.tables
-        .filter(t => t.id !== state.selectedTableId)
-        .map(t => `<option value="${t.id}">Стол ${escapeHtml(t.name)} • ${escapeHtml(t.zone)}</option>`)
+        .filter((t) => t.id !== state.selectedTableId)
+        .map((t) => `<option value="${t.id}">Стол ${escapeHtml(t.name)} • ${escapeHtml(t.zone)}</option>`)
         .join('');
 
       if (!els.transferTarget.value && state.tables.length > 1) {
-        const next = state.tables.find(t => t.id !== state.selectedTableId);
+        const next = state.tables.find((t) => t.id !== state.selectedTableId);
         els.transferTarget.value = next ? next.id : '';
       }
 
@@ -1418,8 +1681,9 @@
       const targetId = els.transferTarget.value;
       if (!targetId || targetId === state.selectedTableId) return;
 
+      const sourceId = state.selectedTableId;
       const source = ensureCurrentOrder();
-      const dest = state.orders[targetId] || {
+      const destination = state.orders[targetId] || {
         items: [],
         paid: false,
         sentToKitchen: false,
@@ -1427,13 +1691,12 @@
         note: ''
       };
 
-      dest.items = [...dest.items, ...source.items];
-      if (!dest.guestName) dest.guestName = source.guestName || '';
-      if (!dest.note) dest.note = source.note || '';
+      destination.items = [...destination.items, ...source.items];
+      if (!destination.guestName) destination.guestName = source.guestName || '';
+      if (!destination.note) destination.note = source.note || '';
 
-      const oldTableId = state.selectedTableId;
-      state.orders[targetId] = dest;
-      state.orders[oldTableId] = {
+      state.orders[targetId] = destination;
+      state.orders[sourceId] = {
         items: [],
         paid: false,
         sentToKitchen: false,
@@ -1445,7 +1708,7 @@
 
       if (dbReady) {
         await upsertOrder(targetId);
-        await supabase.from('wp_orders').delete().eq('table_id', oldTableId);
+        await sb.from('wp_orders').delete().eq('table_id', sourceId);
       }
 
       state.selectedTableId = targetId;
@@ -1459,7 +1722,7 @@
       editingProductId = productId;
 
       if (productId) {
-        const p = state.products.find(x => x.id === productId);
+        const p = state.products.find((x) => x.id === productId);
         if (!p) return;
 
         els.productModalTitle.textContent = 'Редактировать товар';
@@ -1484,11 +1747,18 @@
       const category = els.productCategory.value;
       const popular = els.productPopular.checked;
 
-      if (!name) return toast('Введите название товара');
-      if (!Number.isFinite(price) || price < 0) return toast('Введите корректную цену');
+      if (!name) {
+        toast('Введите название товара');
+        return;
+      }
+
+      if (!Number.isFinite(price) || price < 0) {
+        toast('Введите корректную цену');
+        return;
+      }
 
       if (editingProductId) {
-        const p = state.products.find(x => x.id === editingProductId);
+        const p = state.products.find((x) => x.id === editingProductId);
         if (p) {
           p.name = name;
           p.price = price;
@@ -1496,18 +1766,27 @@
           p.popular = popular;
 
           if (dbReady) {
-            await supabase
+            const { error } = await sb
               .from('wp_products')
               .update({ name, price, category, popular })
               .eq('id', editingProductId);
+            if (error) console.error(error);
           }
         }
       } else {
-        const product = { id: uid('p'), name, price, category, popular };
+        const product = {
+          id: uid('p'),
+          name,
+          price,
+          category,
+          popular
+        };
+
         state.products.unshift(product);
 
         if (dbReady) {
-          await supabase.from('wp_products').insert([product]);
+          const { error } = await sb.from('wp_products').insert([product]);
+          if (error) console.error(error);
         }
       }
 
@@ -1523,16 +1802,17 @@
     async function deleteProduct(productId) {
       if (!confirm('Удалить товар?')) return;
 
-      state.products = state.products.filter(p => p.id !== productId);
-
-      Object.values(state.orders).forEach(order => {
-        order.items = (order.items || []).filter(i => i.productId !== productId);
+      state.products = state.products.filter((p) => p.id !== productId);
+      Object.values(state.orders).forEach((order) => {
+        order.items = (order.items || []).filter((i) => i.productId !== productId);
       });
 
       saveLocal();
 
       if (dbReady) {
-        await supabase.from('wp_products').delete().eq('id', productId);
+        const delRes = await sb.from('wp_products').delete().eq('id', productId);
+        if (delRes.error) console.error(delRes.error);
+
         for (const tableId of Object.keys(state.orders)) {
           await upsertOrder(tableId);
         }
@@ -1546,7 +1826,7 @@
     }
 
     async function repeatHistory(historyId) {
-      const entry = state.history.find(h => h.id === historyId);
+      const entry = state.history.find((h) => h.id === historyId);
       if (!entry) return;
 
       state.orders[state.selectedTableId] = {
@@ -1566,11 +1846,12 @@
     async function deleteHistory(historyId) {
       if (!confirm('Удалить запись из истории?')) return;
 
-      state.history = state.history.filter(h => h.id !== historyId);
+      state.history = state.history.filter((h) => h.id !== historyId);
       saveLocal();
 
       if (dbReady) {
-        await supabase.from('wp_history').delete().eq('id', historyId);
+        const { error } = await sb.from('wp_history').delete().eq('id', historyId);
+        if (error) console.error(error);
       }
 
       renderHistory();
@@ -1579,53 +1860,24 @@
     }
 
     async function clearHistory() {
-      if (!state.history.length) return toast('История уже пустая');
+      if (!state.history.length) {
+        toast('История уже пустая');
+        return;
+      }
+
       if (!confirm('Удалить всю историю?')) return;
 
       state.history = [];
       saveLocal();
 
       if (dbReady) {
-        await supabase.from('wp_history').delete().neq('id', '');
+        const { error } = await sb.from('wp_history').delete().neq('id', '');
+        if (error) console.error(error);
       }
 
       renderHistory();
       renderStats();
       toast('История очищена');
-    }
-
-    function formatDate(iso) {
-      return new Intl.DateTimeFormat('ru-RU', {
-        day: '2-digit',
-        month: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
-      }).format(new Date(iso));
-    }
-
-    function debounce(fn, delay) {
-      let timer;
-      return (...args) => {
-        clearTimeout(timer);
-        timer = setTimeout(() => fn(...args), delay);
-      };
-    }
-
-    function toast(text) {
-      const el = document.createElement('div');
-      el.className = 'toast';
-      el.textContent = text;
-      els.toastWrap.appendChild(el);
-      setTimeout(() => el.remove(), 2500);
-    }
-
-    function escapeHtml(str) {
-      return String(str)
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#039;');
     }
   </script>
 </body>
