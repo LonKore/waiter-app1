@@ -3,15 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Waiter Pro Max • Supabase</title>
+  <title>Waiter Pro Max</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --bg: #0b1220;
       --panel: rgba(15, 23, 42, 0.92);
-      --panel-2: rgba(30, 41, 59, 0.86);
       --card: rgba(255,255,255,0.06);
-      --border: rgba(255,255,255,0.1);
+      --border: rgba(255,255,255,0.10);
       --text: #f8fafc;
       --muted: #94a3b8;
       --green: #22c55e;
@@ -19,13 +18,14 @@
       --amber: #f59e0b;
       --red: #ef4444;
       --violet: #8b5cf6;
+      --shadow: 0 20px 50px rgba(0,0,0,.35);
       --radius-xl: 28px;
       --radius-lg: 20px;
       --radius-md: 14px;
-      --shadow: 0 20px 50px rgba(0,0,0,.35);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
       background:
@@ -59,35 +59,85 @@
     .sticky { position: sticky; top: 16px; }
 
     .header-row {
-      display: flex; align-items: start; justify-content: space-between; gap: 10px; margin-bottom: 18px;
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 18px;
     }
-    .title { font-size: 28px; font-weight: 900; letter-spacing: -.04em; }
-    .subtitle { color: var(--muted); margin-top: 6px; font-size: 13px; }
+
+    .title {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -.04em;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin-top: 6px;
+      font-size: 13px;
+    }
 
     .chip, .status-badge, .pill {
-      display: inline-flex; align-items: center; gap: 8px;
-      border-radius: 999px; padding: 8px 12px; font-size: 12px; font-weight: 700;
-      border: 1px solid var(--border); background: rgba(255,255,255,.06);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.06);
     }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+    }
 
     .label {
-      color: var(--muted); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; font-weight: 800; margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      font-weight: 800;
+      margin-bottom: 10px;
     }
 
     .grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
-    .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
 
     .stat {
-      background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 12px;
     }
-    .stat .name { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .14em; }
-    .stat .value { font-size: 24px; font-weight: 900; margin-top: 8px; }
 
-    .control-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .stat .name {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+    }
+
+    .stat .value {
+      font-size: 24px;
+      font-weight: 900;
+      margin-top: 8px;
+    }
+
+    .control-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
     .control-row > * { flex: 1; }
 
     input, select, textarea, button { font: inherit; }
+
     .input, .select, .textarea {
       width: 100%;
       background: rgba(255,255,255,.06);
@@ -97,17 +147,32 @@
       padding: 12px 14px;
       outline: none;
     }
-    .textarea { resize: vertical; min-height: 80px; }
+
+    .textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
     .input::placeholder, .textarea::placeholder { color: #7b8aa3; }
     .select option { background: #0f172a; color: white; }
 
     .btn {
-      border: none; cursor: pointer; color: white; font-weight: 800;
-      border-radius: 16px; padding: 12px 14px; transition: .18s ease;
-      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      border: none;
+      cursor: pointer;
+      color: white;
+      font-weight: 800;
+      border-radius: 16px;
+      padding: 12px 14px;
+      transition: .18s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
+
     .btn:hover { transform: translateY(-1px); }
     .btn:active { transform: translateY(0); }
+
     .btn-green { background: linear-gradient(135deg, #22c55e, #16a34a); }
     .btn-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
     .btn-red { background: linear-gradient(135deg, #ef4444, #dc2626); }
@@ -115,14 +180,35 @@
     .btn-amber { background: linear-gradient(135deg, #f59e0b, #d97706); }
     .btn.small { padding: 9px 12px; border-radius: 12px; font-size: 13px; }
 
-    .tables-wrap { margin-top: 14px; display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; max-height: 540px; overflow: auto; }
+    .tables-wrap {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 10px;
+      max-height: 540px;
+      overflow: auto;
+    }
+
     .table-card {
-      background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 14px; text-align: left; cursor: pointer;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 14px;
+      text-align: left;
+      cursor: pointer;
       transition: .18s ease;
     }
+
     .table-card:hover { transform: translateY(-2px); }
     .table-card.active { border-color: rgba(59,130,246,.6); background: rgba(59,130,246,.14); }
-    .table-top { display: flex; justify-content: space-between; gap: 8px; align-items: start; }
+
+    .table-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: start;
+    }
+
     .table-name { font-size: 18px; font-weight: 900; }
     .table-meta { color: var(--muted); font-size: 12px; margin-top: 4px; }
     .table-total { margin-top: 10px; color: #86efac; font-weight: 900; }
@@ -132,67 +218,207 @@
     .status-kitchen { color: #fcd34d; border-color: rgba(245,158,11,.35); background: rgba(245,158,11,.12); }
     .status-paid { color: #93c5fd; border-color: rgba(59,130,246,.35); background: rgba(59,130,246,.12); }
 
-    .top-actions { display: flex; justify-content: space-between; gap: 10px; padding: 18px 18px 0; align-items: start; }
+    .top-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 18px 18px 0;
+      align-items: start;
+    }
+
     .top-actions h2 { font-size: 28px; line-height: 1.05; }
     .muted { color: var(--muted); }
 
-    .toolbar, .filters { display: flex; gap: 10px; flex-wrap: wrap; padding: 18px; }
+    .toolbar, .filters {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 18px;
+    }
+
     .toolbar .search { flex: 1 1 260px; }
     .filters { padding-top: 0; }
-    .filter-btn.active { background: linear-gradient(135deg, #3b82f6, #2563eb); }
 
     .cards-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 12px; padding: 0 18px 18px;
-      max-height: calc(100vh - 240px); overflow: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px,1fr));
+      gap: 12px;
+      padding: 0 18px 18px;
+      max-height: calc(100vh - 240px);
+      overflow: auto;
     }
+
     .product-card {
-      background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 14px;
-      display: flex; flex-direction: column; gap: 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
-    .product-category { width: fit-content; padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,.08); color: #cbd5e1; font-size: 12px; }
-    .product-name { font-weight: 800; line-height: 1.2; min-height: 38px; }
-    .product-price { font-size: 20px; font-weight: 900; color: #fcd34d; }
+
+    .product-category {
+      width: fit-content;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      color: #cbd5e1;
+      font-size: 12px;
+    }
+
+    .product-name {
+      font-weight: 800;
+      line-height: 1.2;
+      min-height: 38px;
+    }
+
+    .product-price {
+      font-size: 20px;
+      font-weight: 900;
+      color: #fcd34d;
+    }
+
     .product-row { display: flex; gap: 8px; }
 
     .tabs { display: flex; gap: 10px; }
     .tab { flex: 1; }
 
-    .order-list, .history-list, .manage-list { display: flex; flex-direction: column; gap: 10px; }
-    .scroll { max-height: 320px; overflow: auto; }
-    .order-item, .history-card, .manage-item {
-      background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 12px;
+    .order-list, .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
-    .order-item-top, .history-top, .manage-top { display: flex; justify-content: space-between; gap: 8px; align-items: start; }
+
+    .scroll { max-height: 320px; overflow: auto; }
+
+    .order-item, .history-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 12px;
+    }
+
+    .order-item-top, .history-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: start;
+    }
+
     .order-item-name { font-weight: 800; }
     .order-item-sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
-    .qty-row { display: flex; gap: 8px; align-items: center; margin-top: 10px; }
-    .qty { min-width: 26px; text-align: center; font-weight: 900; }
+
+    .qty-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .qty {
+      min-width: 26px;
+      text-align: center;
+      font-weight: 900;
+    }
 
     .summary {
       background: linear-gradient(135deg, rgba(59,130,246,.12), rgba(34,197,94,.1));
-      border: 1px solid var(--border); border-radius: 22px; padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 14px;
     }
-    .sum-row { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 8px; color: var(--muted); }
-    .sum-row.total { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); color: white; font-size: 22px; font-weight: 900; }
+
+    .sum-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+      color: var(--muted);
+    }
+
+    .sum-row.total {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      color: white;
+      font-size: 22px;
+      font-weight: 900;
+    }
 
     .empty {
-      text-align: center; color: var(--muted); padding: 28px 16px; border: 1px dashed var(--border); border-radius: 20px; background: rgba(255,255,255,.03);
+      text-align: center;
+      color: var(--muted);
+      padding: 28px 16px;
+      border: 1px dashed var(--border);
+      border-radius: 20px;
+      background: rgba(255,255,255,.03);
     }
 
     .modal-backdrop {
-      position: fixed; inset: 0; background: rgba(2,6,23,.76); display: none; align-items: center; justify-content: center; z-index: 50; padding: 18px;
+      position: fixed;
+      inset: 0;
+      background: rgba(2,6,23,.76);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      padding: 18px;
     }
-    .modal-backdrop.open { display: flex; }
-    .modal {
-      width: 100%; max-width: 620px; background: #0f172a; border: 1px solid var(--border); border-radius: 28px; box-shadow: var(--shadow); overflow: hidden;
-    }
-    .modal-head { padding: 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-    .modal-body { padding: 18px; display: flex; flex-direction: column; gap: 12px; }
-    .modal-actions { padding: 0 18px 18px; display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
 
-    .toast-wrap { position: fixed; right: 16px; bottom: 16px; display: flex; flex-direction: column; gap: 10px; z-index: 60; }
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      width: 100%;
+      max-width: 620px;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .modal-head {
+      padding: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-body {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .modal-actions {
+      padding: 0 18px 18px;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .toast-wrap {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 60;
+    }
+
     .toast {
-      background: #111827; border: 1px solid var(--border); color: white; border-radius: 14px; padding: 12px 14px; min-width: 220px; box-shadow: var(--shadow);
+      background: #111827;
+      border: 1px solid var(--border);
+      color: white;
+      border-radius: 14px;
+      padding: 12px 14px;
+      min-width: 220px;
+      box-shadow: var(--shadow);
     }
 
     @media (max-width: 1200px) {
@@ -200,14 +426,16 @@
       .right-col { grid-column: 1 / -1; }
       .sticky { position: static; }
     }
+
     @media (max-width: 860px) {
       .app { grid-template-columns: 1fr; }
       .tables-wrap { grid-template-columns: repeat(3,1fr); max-height: none; }
       .cards-grid { max-height: none; }
     }
+
     @media (max-width: 560px) {
       body { padding: 10px; }
-      .tables-wrap, .grid-2, .grid-3 { grid-template-columns: repeat(2,1fr); }
+      .tables-wrap, .grid-2 { grid-template-columns: repeat(2,1fr); }
       .cards-grid { grid-template-columns: repeat(2,1fr); padding: 0 12px 12px; }
       .panel-body, .toolbar, .filters, .top-actions { padding-left: 12px; padding-right: 12px; }
       .top-actions { flex-direction: column; }
@@ -221,7 +449,7 @@
         <div class="header-row">
           <div>
             <div class="title">Waiter Pro Max</div>
-            <div class="subtitle">Supabase подключен • HTML версия</div>
+            <div class="subtitle">HTML + Supabase</div>
           </div>
           <div id="dbStatus" class="chip"><span class="dot"></span>Подключение...</div>
         </div>
@@ -369,7 +597,8 @@
     const SUPABASE_KEY = 'sb_publishable_B95AUpkoWKAL6KuPZdYCHQ_bcN4cEAY';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const LOCAL_KEY = 'waiter_pro_max_supabase_fallback_v1';
+    const LOCAL_KEY = 'waiter_pro_max_supabase_fallback_v2';
+
     const initialState = {
       tables: [
         { id: 't1', name: '1', zone: 'Зал', seats: 4 },
@@ -456,16 +685,17 @@
     renderAll();
     initSupabase();
 
-    function structuredCloneSafe(obj) {
+    function clone(obj) {
       return JSON.parse(JSON.stringify(obj));
     }
 
     function loadLocal() {
       try {
         const raw = localStorage.getItem(LOCAL_KEY);
-        return raw ? JSON.parse(raw) : structuredCloneSafe(initialState);
+        const parsed = raw ? JSON.parse(raw) : clone(initialState);
+        return parsed;
       } catch {
-        return structuredCloneSafe(initialState);
+        return clone(initialState);
       }
     }
 
@@ -488,7 +718,13 @@
     function ensureCurrentOrder() {
       if (!state.selectedTableId) return { items: [], paid: false, sentToKitchen: false, guestName: '', note: '' };
       if (!state.orders[state.selectedTableId]) {
-        state.orders[state.selectedTableId] = { items: [], paid: false, sentToKitchen: false, guestName: '', note: '' };
+        state.orders[state.selectedTableId] = {
+          items: [],
+          paid: false,
+          sentToKitchen: false,
+          guestName: '',
+          note: ''
+        };
       }
       return state.orders[state.selectedTableId];
     }
@@ -503,7 +739,12 @@
     function bind() {
       els.addTableBtn.addEventListener('click', addTable);
       els.newTableName.addEventListener('keydown', e => e.key === 'Enter' && addTable());
-      els.zoneFilter.addEventListener('change', e => { zoneFilter = e.target.value; renderTables(); });
+
+      els.zoneFilter.addEventListener('change', e => {
+        zoneFilter = e.target.value;
+        renderTables();
+      });
+
       els.toggleFreeOnlyBtn.addEventListener('click', async () => {
         state.settings.showOnlyFree = !state.settings.showOnlyFree;
         await persistSettings();
@@ -521,34 +762,49 @@
         });
       });
 
-      els.productSearch.addEventListener('input', e => { productSearch = e.target.value.toLowerCase(); renderProducts(); });
-      els.historySearch.addEventListener('input', e => { historySearch = e.target.value.toLowerCase(); renderHistory(); });
+      els.productSearch.addEventListener('input', e => {
+        productSearch = e.target.value.toLowerCase();
+        renderProducts();
+      });
+
+      els.historySearch.addEventListener('input', e => {
+        historySearch = e.target.value.toLowerCase();
+        renderHistory();
+      });
+
       els.guestName.addEventListener('input', debounce(async e => {
         ensureCurrentOrder().guestName = e.target.value;
         await upsertOrder(state.selectedTableId);
       }, 350));
+
       els.orderNote.addEventListener('input', debounce(async e => {
         ensureCurrentOrder().note = e.target.value;
         await upsertOrder(state.selectedTableId);
       }, 350));
+
       els.servicePercent.addEventListener('change', async e => {
         state.settings.servicePercent = Number(e.target.value);
         await persistSettings();
-        renderOrder(); renderTables();
+        renderOrder();
+        renderTables();
       });
 
       els.kitchenBtn.addEventListener('click', async () => {
         const order = ensureCurrentOrder();
         order.sentToKitchen = !order.sentToKitchen;
         await upsertOrder(state.selectedTableId);
-        renderOrder(); renderTables();
+        renderOrder();
+        renderTables();
       });
+
       els.paidBtn.addEventListener('click', async () => {
         const order = ensureCurrentOrder();
         order.paid = !order.paid;
         await upsertOrder(state.selectedTableId);
-        renderOrder(); renderTables();
+        renderOrder();
+        renderTables();
       });
+
       els.clearOrderBtn.addEventListener('click', clearOrder);
       els.closeOrderBtn.addEventListener('click', closeOrder);
       els.transferBtn.addEventListener('click', openTransferModal);
@@ -559,11 +815,15 @@
       els.saveProductBtn.addEventListener('click', saveProduct);
 
       document.querySelectorAll('[data-close]').forEach(btn => {
-        btn.addEventListener('click', () => document.getElementById(btn.dataset.close).classList.remove('open'));
+        btn.addEventListener('click', () => {
+          document.getElementById(btn.dataset.close).classList.remove('open');
+        });
       });
 
       window.addEventListener('click', e => {
-        if (e.target.classList.contains('modal-backdrop')) e.target.classList.remove('open');
+        if (e.target.classList.contains('modal-backdrop')) {
+          e.target.classList.remove('open');
+        }
       });
     }
 
@@ -571,12 +831,12 @@
       try {
         setDbStatus('Проверка базы...');
         const ok = await ensureSchema();
+
         if (!ok) {
           dbReady = false;
           setDbStatus('Локальный режим');
-          state = loadLocal();
-          if (!state.tables?.length) state.tables = structuredCloneSafe(initialState.tables);
-          if (!state.products?.length) state.products = structuredCloneSafe(initialState.products);
+          if (!state.tables?.length) state.tables = clone(initialState.tables);
+          if (!state.products?.length) state.products = clone(initialState.products);
           if (!state.selectedTableId) state.selectedTableId = state.tables[0]?.id || null;
           saveLocal();
           renderAll();
@@ -593,13 +853,12 @@
         console.error('initSupabase error:', e);
         dbReady = false;
         setDbStatus('Ошибка базы');
-        state = loadLocal();
-        if (!state.tables?.length) state.tables = structuredCloneSafe(initialState.tables);
-        if (!state.products?.length) state.products = structuredCloneSafe(initialState.products);
+        if (!state.tables?.length) state.tables = clone(initialState.tables);
+        if (!state.products?.length) state.products = clone(initialState.products);
         if (!state.selectedTableId) state.selectedTableId = state.tables[0]?.id || null;
         saveLocal();
         renderAll();
-        toast('Ошибка подключения к Supabase. Включен локальный режим.');
+        toast('Ошибка подключения к Supabase.');
       }
     }
 
@@ -623,35 +882,47 @@
     }
 
     async function bootstrapDataIfEmpty() {
-      try {
-        const [{ count: tablesCount, error: tablesErr }, { count: productsCount, error: productsErr }, settingsRes] = await Promise.all([
-          supabase.from('wp_tables').select('*', { count: 'exact', head: true }),
-          supabase.from('wp_products').select('*', { count: 'exact', head: true }),
-          supabase.from('wp_settings').select('*').eq('id', 'main').maybeSingle()
-        ]);
+      const [{ count: tablesCount }, { count: productsCount }, settingsRes] = await Promise.all([
+        supabase.from('wp_tables').select('*', { count: 'exact', head: true }),
+        supabase.from('wp_products').select('*', { count: 'exact', head: true }),
+        supabase.from('wp_settings').select('*').eq('id', 'main').maybeSingle()
+      ]);
 
-        if (tablesErr || productsErr || settingsRes.error) {
-          throw new Error('Ошибка проверки стартовых данных');
-        }
+      if ((tablesCount ?? 0) === 0) {
+        await supabase.from('wp_tables').insert(
+          initialState.tables.map(t => ({ id: t.id, name: t.name, zone: t.zone, seats: t.seats }))
+        );
+      }
 
-        if ((tablesCount ?? 0) === 0) {
-          await supabase.from('wp_tables').insert(initialState.tables.map(t => ({ id: t.id, name: t.name, zone: t.zone, seats: t.seats })));
-        }
-        if ((productsCount ?? 0) === 0) {
-          await supabase.from('wp_products').insert(initialState.products.map(p => ({ id: p.id, name: p.name, price: p.price, category: p.category, popular: p.popular })));
-        }
-        if (!settingsRes.data) {
-          await supabase.from('wp_settings').upsert([{ id: 'main', service_percent: 0, show_only_free: false }], { onConflict: 'id' });
-        }
-      } catch (e) {
-        console.error('bootstrapDataIfEmpty error:', e);
-        throw e;
+      if ((productsCount ?? 0) === 0) {
+        await supabase.from('wp_products').insert(
+          initialState.products.map(p => ({
+            id: p.id,
+            name: p.name,
+            price: p.price,
+            category: p.category,
+            popular: p.popular
+          }))
+        );
+      }
+
+      if (!settingsRes.data) {
+        await supabase.from('wp_settings').upsert(
+          [{ id: 'main', service_percent: 0, show_only_free: false }],
+          { onConflict: 'id' }
+        );
       }
     }
 
     async function loadFromSupabase() {
       try {
-        const [{ data: tables, error: tablesErr }, { data: products, error: productsErr }, { data: orders, error: ordersErr }, { data: history, error: historyErr }, { data: settings, error: settingsErr }] = await Promise.all([
+        const [
+          { data: tables, error: tablesErr },
+          { data: products, error: productsErr },
+          { data: orders, error: ordersErr },
+          { data: history, error: historyErr },
+          { data: settings, error: settingsErr }
+        ] = await Promise.all([
           supabase.from('wp_tables').select('*').order('name'),
           supabase.from('wp_products').select('*').order('name'),
           supabase.from('wp_orders').select('*'),
@@ -663,13 +934,25 @@
           throw new Error('Ошибка чтения данных из Supabase');
         }
 
-        const nextTables = (tables || []).map(t => ({ id: t.id, name: t.name, zone: t.zone || 'Зал', seats: t.seats || 4 }));
-        const nextProducts = (products || []).map(p => ({ id: p.id, name: p.name, price: p.price || 0, category: p.category || 'Еда', popular: !!p.popular }));
+        state.tables = (tables || []).map(t => ({
+          id: t.id,
+          name: t.name,
+          zone: t.zone || 'Зал',
+          seats: t.seats || 4
+        }));
 
-        state.tables = nextTables.length ? nextTables : structuredCloneSafe(initialState.tables);
-        state.products = nextProducts.length ? nextProducts : structuredCloneSafe(initialState.products);
+        state.products = (products || []).map(p => ({
+          id: p.id,
+          name: p.name,
+          price: p.price || 0,
+          category: p.category || 'Еда',
+          popular: !!p.popular
+        }));
+
+        if (!state.tables.length) state.tables = clone(initialState.tables);
+        if (!state.products.length) state.products = clone(initialState.products);
+
         state.orders = {};
-
         (orders || []).forEach(o => {
           state.orders[o.table_id] = {
             items: Array.isArray(o.items) ? o.items : [],
@@ -706,8 +989,8 @@
         console.error('loadFromSupabase error:', e);
         dbReady = false;
         setDbStatus('Ошибка базы');
-        if (!state.tables?.length) state.tables = structuredCloneSafe(initialState.tables);
-        if (!state.products?.length) state.products = structuredCloneSafe(initialState.products);
+        if (!state.tables?.length) state.tables = clone(initialState.tables);
+        if (!state.products?.length) state.products = clone(initialState.products);
         if (!state.selectedTableId) state.selectedTableId = state.tables[0]?.id || null;
         saveLocal();
         renderAll();
@@ -716,7 +999,8 @@
     }
 
     function setupRealtime() {
-      supabase.channel('wp-live')
+      supabase
+        .channel('wp-live')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'wp_tables' }, () => loadFromSupabase())
         .on('postgres_changes', { event: '*', schema: 'public', table: 'wp_products' }, () => loadFromSupabase())
         .on('postgres_changes', { event: '*', schema: 'public', table: 'wp_orders' }, () => loadFromSupabase())
@@ -728,29 +1012,44 @@
     async function persistSettings() {
       saveLocal();
       if (!dbReady) return;
-      await supabase.from('wp_settings').upsert([{
-        id: 'main',
-        service_percent: state.settings.servicePercent || 0,
-        show_only_free: !!state.settings.showOnlyFree
-      }], { onConflict: 'id' });
+      await supabase.from('wp_settings').upsert(
+        [{
+          id: 'main',
+          service_percent: state.settings.servicePercent || 0,
+          show_only_free: !!state.settings.showOnlyFree
+        }],
+        { onConflict: 'id' }
+      );
     }
 
     async function upsertOrder(tableId) {
       saveLocal();
       if (!dbReady) return;
-      const order = state.orders[tableId] || { items: [], paid: false, sentToKitchen: false, guestName: '', note: '' };
+
+      const order = state.orders[tableId] || {
+        items: [],
+        paid: false,
+        sentToKitchen: false,
+        guestName: '',
+        note: ''
+      };
+
       if (!order.items.length && !order.guestName && !order.note && !order.paid && !order.sentToKitchen) {
         await supabase.from('wp_orders').delete().eq('table_id', tableId);
         return;
       }
-      await supabase.from('wp_orders').upsert([{
-        table_id: tableId,
-        items: order.items,
-        paid: !!order.paid,
-        sent_to_kitchen: !!order.sentToKitchen,
-        guest_name: order.guestName || '',
-        note: order.note || ''
-      }], { onConflict: 'table_id' });
+
+      await supabase.from('wp_orders').upsert(
+        [{
+          table_id: tableId,
+          items: order.items,
+          paid: !!order.paid,
+          sent_to_kitchen: !!order.sentToKitchen,
+          guest_name: order.guestName || '',
+          note: order.note || ''
+        }],
+        { onConflict: 'table_id' }
+      );
     }
 
     function renderAll() {
@@ -771,8 +1070,13 @@
         ['Столов', state.tables.length],
         ['Товаров', state.products.length],
         ['Активных', active],
-        ['История', state.history.length],
-      ].map(([name, value]) => `<div class="stat"><div class="name">${name}</div><div class="value">${value}</div></div>`).join('');
+        ['История', state.history.length]
+      ].map(([name, value]) => `
+        <div class="stat">
+          <div class="name">${name}</div>
+          <div class="value">${value}</div>
+        </div>
+      `).join('');
       els.statsBox.innerHTML = html;
     }
 
@@ -783,14 +1087,17 @@
 
     function renderTables() {
       let tables = state.tables.filter(t => zoneFilter === 'Все зоны' || t.zone === zoneFilter);
+
       if (state.settings.showOnlyFree) {
         tables = tables.filter(t => !(state.orders[t.id] && state.orders[t.id].items && state.orders[t.id].items.length));
       }
+
       els.tablesWrap.innerHTML = tables.map(table => {
         const order = state.orders[table.id] || { items: [] };
         const status = orderStatus(order);
         const total = (order.items || []).reduce((s, i) => s + i.price * i.qty, 0);
         const count = (order.items || []).reduce((s, i) => s + i.qty, 0);
+
         return `
           <button class="table-card ${table.id === state.selectedTableId ? 'active' : ''}" data-table="${table.id}">
             <div class="table-top">
@@ -810,7 +1117,8 @@
         btn.addEventListener('click', () => {
           state.selectedTableId = btn.dataset.table;
           saveLocal();
-          renderTables(); renderOrder();
+          renderTables();
+          renderOrder();
         });
       });
     }
@@ -818,10 +1126,17 @@
     function renderCategories() {
       const categories = ['Все', ...new Set(state.products.map(p => p.category))];
       els.categoryFilters.innerHTML = categories.map(cat => `
-        <button class="btn ${cat === categoryFilter ? 'btn-blue' : 'btn-dark'} small filter-btn" data-cat="${cat}">${escapeHtml(cat)}</button>
+        <button class="btn ${cat === categoryFilter ? 'btn-blue' : 'btn-dark'} small filter-btn" data-cat="${cat}">
+          ${escapeHtml(cat)}
+        </button>
       `).join('');
+
       els.categoryFilters.querySelectorAll('[data-cat]').forEach(btn => {
-        btn.addEventListener('click', () => { categoryFilter = btn.dataset.cat; renderCategories(); renderProducts(); });
+        btn.addEventListener('click', () => {
+          categoryFilter = btn.dataset.cat;
+          renderCategories();
+          renderProducts();
+        });
       });
     }
 
@@ -845,15 +1160,24 @@
         </div>
       `).join('') || '<div class="empty" style="grid-column:1/-1;">Товары не найдены</div>';
 
-      els.productsGrid.querySelectorAll('[data-add-product]').forEach(btn => btn.addEventListener('click', () => addProductToOrder(btn.dataset.addProduct)));
-      els.productsGrid.querySelectorAll('[data-edit-product]').forEach(btn => btn.addEventListener('click', () => openProductModal(btn.dataset.editProduct)));
-      els.productsGrid.querySelectorAll('[data-del-product]').forEach(btn => btn.addEventListener('click', () => deleteProduct(btn.dataset.delProduct)));
+      els.productsGrid.querySelectorAll('[data-add-product]').forEach(btn => {
+        btn.addEventListener('click', () => addProductToOrder(btn.dataset.add-product || btn.dataset.addProduct));
+      });
+
+      els.productsGrid.querySelectorAll('[data-edit-product]').forEach(btn => {
+        btn.addEventListener('click', () => openProductModal(btn.dataset.editProduct));
+      });
+
+      els.productsGrid.querySelectorAll('[data-del-product]').forEach(btn => {
+        btn.addEventListener('click', () => deleteProduct(btn.dataset.delProduct));
+      });
     }
 
     function renderOrder() {
       const table = currentTable();
       const order = ensureCurrentOrder();
       const status = orderStatus(order);
+
       els.orderTitle.textContent = table ? 'Стол ' + table.name : 'Стол не выбран';
       els.orderStatus.className = 'status-badge ' + status.cls;
       els.orderStatus.textContent = status.text;
@@ -882,24 +1206,31 @@
           </div>
         `).join('');
 
-        els.orderList.querySelectorAll('[data-inc]').forEach(btn => btn.addEventListener('click', () => changeQty(btn.dataset.inc, 1)));
-        els.orderList.querySelectorAll('[data-dec]').forEach(btn => btn.addEventListener('click', () => changeQty(btn.dataset.dec, -1)));
+        els.orderList.querySelectorAll('[data-inc]').forEach(btn => {
+          btn.addEventListener('click', () => changeQty(btn.dataset.inc, 1));
+        });
+
+        els.orderList.querySelectorAll('[data-dec]').forEach(btn => {
+          btn.addEventListener('click', () => changeQty(btn.dataset.dec, -1));
+        });
       }
 
       const count = order.items.reduce((s, i) => s + i.qty, 0);
       const subtotal = order.items.reduce((s, i) => s + i.price * i.qty, 0);
       const total = subtotal + Math.round(subtotal * ((state.settings.servicePercent || 0) / 100));
+
       els.sumCount.textContent = count;
       els.sumSubtotal.textContent = rub(subtotal);
       els.sumTotal.textContent = rub(total);
+
       renderTables();
       renderStats();
     }
 
     function renderHistory() {
       const items = state.history.filter(entry => {
-        const searchBase = [entry.tableName, entry.guestName || '', ...entry.items.map(i => i.name)].join(' ').toLowerCase();
-        return !historySearch || searchBase.includes(historySearch);
+        const text = [entry.tableName, entry.guestName || '', ...entry.items.map(i => i.name)].join(' ').toLowerCase();
+        return !historySearch || text.includes(historySearch);
       });
 
       els.historyList.innerHTML = items.map(entry => `
@@ -911,10 +1242,18 @@
             </div>
             <div style="font-weight:900; color:#fcd34d;">${rub(entry.total)}</div>
           </div>
+
           <div style="margin-top:10px; display:flex; flex-direction:column; gap:6px;">
-            ${entry.items.map(item => `<div class="order-item-sub" style="display:flex; justify-content:space-between; gap:8px;"><span>${escapeHtml(item.name)} × ${item.qty}</span><strong>${rub(item.price * item.qty)}</strong></div>`).join('')}
+            ${entry.items.map(item => `
+              <div class="order-item-sub" style="display:flex; justify-content:space-between; gap:8px;">
+                <span>${escapeHtml(item.name)} × ${item.qty}</span>
+                <strong>${rub(item.price * item.qty)}</strong>
+              </div>
+            `).join('')}
           </div>
+
           ${entry.note ? `<div class="order-item-sub" style="margin-top:8px;">Комментарий: ${escapeHtml(entry.note)}</div>` : ''}
+
           <div class="product-row" style="margin-top:10px;">
             <button class="btn btn-blue small" data-repeat="${entry.id}">Повторить</button>
             <button class="btn btn-red small" data-del-history="${entry.id}">Удалить</button>
@@ -922,42 +1261,67 @@
         </div>
       `).join('') || '<div class="empty">История пока пустая</div>';
 
-      els.historyList.querySelectorAll('[data-repeat]').forEach(btn => btn.addEventListener('click', () => repeatHistory(btn.dataset.repeat)));
-      els.historyList.querySelectorAll('[data-del-history]').forEach(btn => btn.addEventListener('click', () => deleteHistory(btn.dataset.delHistory)));
+      els.historyList.querySelectorAll('[data-repeat]').forEach(btn => {
+        btn.addEventListener('click', () => repeatHistory(btn.dataset.repeat));
+      });
+
+      els.historyList.querySelectorAll('[data-del-history]').forEach(btn => {
+        btn.addEventListener('click', () => deleteHistory(btn.dataset.delHistory));
+      });
     }
 
     async function addTable() {
       const name = els.newTableName.value.trim();
       if (!name) return toast('Введите название стола');
+
       const table = { id: uid('t'), name, zone: 'Зал', seats: 4 };
       state.tables.push(table);
       els.newTableName.value = '';
       saveLocal();
+
       if (dbReady) {
         const { error } = await supabase.from('wp_tables').insert([table]);
         if (error) toast('Ошибка сохранения стола');
       }
-      renderZoneFilter(); renderTables(); renderStats(); toast('Стол добавлен');
+
+      renderZoneFilter();
+      renderTables();
+      renderStats();
+      toast('Стол добавлен');
     }
 
     async function addProductToOrder(productId) {
       const product = state.products.find(p => p.id === productId);
       if (!product) return;
+
       const order = ensureCurrentOrder();
       const existing = order.items.find(i => i.productId === productId);
+
       if (existing) existing.qty += 1;
-      else order.items.push({ productId, name: product.name, price: product.price, qty: 1, category: product.category });
+      else {
+        order.items.push({
+          productId,
+          name: product.name,
+          price: product.price,
+          qty: 1,
+          category: product.category
+        });
+      }
+
       order.paid = false;
       await upsertOrder(state.selectedTableId);
-      renderOrder(); toast('Товар добавлен');
+      renderOrder();
+      toast('Товар добавлен');
     }
 
     async function changeQty(productId, diff) {
       const order = ensureCurrentOrder();
       const item = order.items.find(i => i.productId === productId);
       if (!item) return;
+
       item.qty += diff;
       order.items = order.items.filter(i => i.qty > 0);
+
       await upsertOrder(state.selectedTableId);
       renderOrder();
     }
@@ -966,82 +1330,138 @@
       const order = ensureCurrentOrder();
       if (!order.items.length) return toast('Заказ уже пустой');
       if (!confirm('Очистить заказ?')) return;
-      state.orders[state.selectedTableId] = { items: [], paid: false, sentToKitchen: false, guestName: '', note: '' };
+
+      state.orders[state.selectedTableId] = {
+        items: [],
+        paid: false,
+        sentToKitchen: false,
+        guestName: '',
+        note: ''
+      };
+
       await upsertOrder(state.selectedTableId);
-      renderOrder(); toast('Заказ очищен');
+      renderOrder();
+      toast('Заказ очищен');
     }
 
     async function closeOrder() {
       const table = currentTable();
       const order = ensureCurrentOrder();
+
       if (!table || !order.items.length) return toast('Заказ пустой');
+
       const subtotal = order.items.reduce((s, i) => s + i.price * i.qty, 0);
       const total = subtotal + Math.round(subtotal * ((state.settings.servicePercent || 0) / 100));
-      const historyItem = {
+
+      const historyItemDb = {
         id: uid('h'),
         table_id: table.id,
         table_name: table.name,
         guest_name: order.guestName || '',
         note: order.note || '',
         created_at: new Date().toISOString(),
-        items: structuredCloneSafe(order.items),
+        items: clone(order.items),
         total
       };
+
       state.history.unshift({
-        id: historyItem.id,
-        tableId: historyItem.table_id,
-        tableName: historyItem.table_name,
-        guestName: historyItem.guest_name,
-        note: historyItem.note,
-        createdAt: historyItem.created_at,
-        items: historyItem.items,
-        total: historyItem.total
+        id: historyItemDb.id,
+        tableId: historyItemDb.table_id,
+        tableName: historyItemDb.table_name,
+        guestName: historyItemDb.guest_name,
+        note: historyItemDb.note,
+        createdAt: historyItemDb.created_at,
+        items: historyItemDb.items,
+        total: historyItemDb.total
       });
-      state.orders[state.selectedTableId] = { items: [], paid: false, sentToKitchen: false, guestName: '', note: '' };
+
+      state.orders[state.selectedTableId] = {
+        items: [],
+        paid: false,
+        sentToKitchen: false,
+        guestName: '',
+        note: ''
+      };
+
       saveLocal();
+
       if (dbReady) {
-        await supabase.from('wp_history').insert([historyItem]);
+        await supabase.from('wp_history').insert([historyItemDb]);
         await supabase.from('wp_orders').delete().eq('table_id', state.selectedTableId);
       }
-      renderOrder(); renderHistory(); renderStats(); toast('Заказ закрыт');
+
+      renderOrder();
+      renderHistory();
+      renderStats();
+      toast('Заказ закрыт');
       document.querySelector('[data-tab="history"]').click();
     }
 
     function openTransferModal() {
       const order = ensureCurrentOrder();
       if (!order.items.length) return toast('Нечего переносить');
+
       els.transferTarget.innerHTML = state.tables
         .filter(t => t.id !== state.selectedTableId)
-        .map(t => `<option value="${t.id}">Стол ${escapeHtml(t.name)} • ${escapeHtml(t.zone)}</option>`).join('');
-      if (!els.transferTarget.value && state.tables.length > 1) els.transferTarget.value = state.tables.find(t => t.id !== state.selectedTableId)?.id || '';
+        .map(t => `<option value="${t.id}">Стол ${escapeHtml(t.name)} • ${escapeHtml(t.zone)}</option>`)
+        .join('');
+
+      if (!els.transferTarget.value && state.tables.length > 1) {
+        const next = state.tables.find(t => t.id !== state.selectedTableId);
+        els.transferTarget.value = next ? next.id : '';
+      }
+
       els.transferModal.classList.add('open');
     }
 
     async function transferOrder() {
       const targetId = els.transferTarget.value;
       if (!targetId || targetId === state.selectedTableId) return;
+
       const source = ensureCurrentOrder();
-      const dest = state.orders[targetId] || { items: [], paid: false, sentToKitchen: false, guestName: '', note: '' };
+      const dest = state.orders[targetId] || {
+        items: [],
+        paid: false,
+        sentToKitchen: false,
+        guestName: '',
+        note: ''
+      };
+
       dest.items = [...dest.items, ...source.items];
       if (!dest.guestName) dest.guestName = source.guestName || '';
       if (!dest.note) dest.note = source.note || '';
+
+      const oldTableId = state.selectedTableId;
       state.orders[targetId] = dest;
-      state.orders[state.selectedTableId] = { items: [], paid: false, sentToKitchen: false, guestName: '', note: '' };
+      state.orders[oldTableId] = {
+        items: [],
+        paid: false,
+        sentToKitchen: false,
+        guestName: '',
+        note: ''
+      };
+
       saveLocal();
+
       if (dbReady) {
         await upsertOrder(targetId);
-        await supabase.from('wp_orders').delete().eq('table_id', state.selectedTableId);
+        await supabase.from('wp_orders').delete().eq('table_id', oldTableId);
       }
+
       state.selectedTableId = targetId;
       els.transferModal.classList.remove('open');
-      renderOrder(); renderTables(); toast('Заказ перенесён');
+      renderOrder();
+      renderTables();
+      toast('Заказ перенесён');
     }
 
     function openProductModal(productId = null) {
       editingProductId = productId;
+
       if (productId) {
         const p = state.products.find(x => x.id === productId);
         if (!p) return;
+
         els.productModalTitle.textContent = 'Редактировать товар';
         els.productName.value = p.name;
         els.productPrice.value = p.price;
@@ -1054,6 +1474,7 @@
         els.productCategory.value = 'Еда';
         els.productPopular.checked = false;
       }
+
       els.productModal.classList.add('open');
     }
 
@@ -1062,81 +1483,123 @@
       const price = Number(els.productPrice.value);
       const category = els.productCategory.value;
       const popular = els.productPopular.checked;
+
       if (!name) return toast('Введите название товара');
       if (!Number.isFinite(price) || price < 0) return toast('Введите корректную цену');
 
       if (editingProductId) {
         const p = state.products.find(x => x.id === editingProductId);
         if (p) {
-          p.name = name; p.price = price; p.category = category; p.popular = popular;
+          p.name = name;
+          p.price = price;
+          p.category = category;
+          p.popular = popular;
+
           if (dbReady) {
-            await supabase.from('wp_products').update({ name, price, category, popular }).eq('id', editingProductId);
+            await supabase
+              .from('wp_products')
+              .update({ name, price, category, popular })
+              .eq('id', editingProductId);
           }
         }
       } else {
         const product = { id: uid('p'), name, price, category, popular };
         state.products.unshift(product);
+
         if (dbReady) {
           await supabase.from('wp_products').insert([product]);
         }
       }
-      saveLocal(); renderCategories(); renderProducts(); renderOrder(); renderStats();
+
+      saveLocal();
+      renderCategories();
+      renderProducts();
+      renderOrder();
+      renderStats();
       els.productModal.classList.remove('open');
       toast(editingProductId ? 'Товар обновлён' : 'Товар добавлен');
     }
 
     async function deleteProduct(productId) {
       if (!confirm('Удалить товар?')) return;
+
       state.products = state.products.filter(p => p.id !== productId);
+
       Object.values(state.orders).forEach(order => {
         order.items = (order.items || []).filter(i => i.productId !== productId);
       });
+
       saveLocal();
+
       if (dbReady) {
         await supabase.from('wp_products').delete().eq('id', productId);
         for (const tableId of Object.keys(state.orders)) {
           await upsertOrder(tableId);
         }
       }
-      renderCategories(); renderProducts(); renderOrder(); renderStats(); toast('Товар удалён');
+
+      renderCategories();
+      renderProducts();
+      renderOrder();
+      renderStats();
+      toast('Товар удалён');
     }
 
     async function repeatHistory(historyId) {
       const entry = state.history.find(h => h.id === historyId);
       if (!entry) return;
+
       state.orders[state.selectedTableId] = {
-        items: structuredCloneSafe(entry.items),
+        items: clone(entry.items),
         paid: false,
         sentToKitchen: false,
         guestName: entry.guestName || '',
         note: entry.note || ''
       };
+
       await upsertOrder(state.selectedTableId);
-      renderOrder(); toast('Заказ повторён');
+      renderOrder();
+      toast('Заказ повторён');
       document.querySelector('[data-tab="order"]').click();
     }
 
     async function deleteHistory(historyId) {
       if (!confirm('Удалить запись из истории?')) return;
+
       state.history = state.history.filter(h => h.id !== historyId);
       saveLocal();
-      if (dbReady) await supabase.from('wp_history').delete().eq('id', historyId);
-      renderHistory(); renderStats(); toast('Запись удалена');
+
+      if (dbReady) {
+        await supabase.from('wp_history').delete().eq('id', historyId);
+      }
+
+      renderHistory();
+      renderStats();
+      toast('Запись удалена');
     }
 
     async function clearHistory() {
       if (!state.history.length) return toast('История уже пустая');
       if (!confirm('Удалить всю историю?')) return;
+
       state.history = [];
       saveLocal();
-      if (dbReady) await supabase.from('wp_history').delete().neq('id', '');
-      renderHistory(); renderStats();
+
+      if (dbReady) {
+        await supabase.from('wp_history').delete().neq('id', '');
+      }
+
+      renderHistory();
+      renderStats();
       toast('История очищена');
     }
 
     function formatDate(iso) {
       return new Intl.DateTimeFormat('ru-RU', {
-        day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
+        day: '2-digit',
+        month: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
       }).format(new Date(iso));
     }
 
