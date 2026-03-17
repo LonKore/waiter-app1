@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Waiter Pro Max • Supabase</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --panel: rgba(15, 23, 42, 0.92);
+      --panel-2: rgba(30, 41, 59, 0.86);
+      --card: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.1);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --green: #22c55e;
+      --blue: #3b82f6;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --violet: #8b5cf6;
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --shadow: 0 20px 50px rgba(0,0,0,.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(59,130,246,.15), transparent 24%),
+        radial-gradient(circle at top right, rgba(34,197,94,.12), transparent 22%),
+        linear-gradient(180deg, #09111d 0%, #0f172a 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .app {
+      max-width: 1500px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 320px 1fr 400px;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      backdrop-filter: blur(18px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-body { padding: 18px; }
+    .sticky { position: sticky; top: 16px; }
+
+    .header-row {
+      display: flex; align-items: start; justify-content: space-between; gap: 10px; margin-bottom: 18px;
+    }
+    .title { font-size: 28px; font-weight: 900; letter-spacing: -.04em; }
+    .subtitle { color: var(--muted); margin-top: 6px; font-size: 13px; }
+
+    .chip, .status-badge, .pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      border-radius: 999px; padding: 8px 12px; font-size: 12px; font-weight: 700;
+      border: 1px solid var(--border); background: rgba(255,255,255,.06);
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+
+    .label {
+      color: var(--muted); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; font-weight: 800; margin-bottom: 10px;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+
+    .stat {
+      background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 12px;
+    }
+    .stat .name { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .14em; }
+    .stat .value { font-size: 24px; font-weight: 900; margin-top: 8px; }
+
+    .control-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .control-row > * { flex: 1; }
+
+    input, select, textarea, button { font: inherit; }
+    .input, .select, .textarea {
+      width: 100%;
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 16px;
+      padding: 12px 14px;
+      outline: none;
+    }
+    .textarea { resize: vertical; min-height: 80px; }
+    .input::placeholder, .textarea::placeholder { color: #7b8aa3; }
+    .select option { background: #0f172a; color: white; }
+
+    .btn {
+      border: none; cursor: pointer; color: white; font-weight: 800;
+      border-radius: 16px; padding: 12px 14px; transition: .18s ease;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+    .btn-green { background: linear-gradient(135deg, #22c55e, #16a34a); }
+    .btn-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+    .btn-red { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    .btn-dark { background: rgba(255,255,255,.07); border: 1px solid var(--border); }
+    .btn-amber { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .btn.small { padding: 9px 12px; border-radius: 12px; font-size: 13px; }
+
+    .tables-wrap { margin-top: 14px; display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; max-height: 540px; overflow: auto; }
+    .table-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 14px; text-align: left; cursor: pointer;
+      transition: .18s ease;
+    }
+    .table-card:hover { transform: translateY(-2px); }
+    .table-card.active { border-color: rgba(59,130,246,.6); background: rgba(59,130,246,.14); }
+    .table-top { display: flex; justify-content: space-between; gap: 8px; align-items: start; }
+    .table-name { font-size: 18px; font-weight: 900; }
+    .table-meta { color: var(--muted); font-size: 12px; margin-top: 4px; }
+    .table-total { margin-top: 10px; color: #86efac; font-weight: 900; }
+
+    .status-free { color: #86efac; border-color: rgba(34,197,94,.35); background: rgba(34,197,94,.12); }
+    .status-active { color: #c4b5fd; border-color: rgba(139,92,246,.35); background: rgba(139,92,246,.12); }
+    .status-kitchen { color: #fcd34d; border-color: rgba(245,158,11,.35); background: rgba(245,158,11,.12); }
+    .status-paid { color: #93c5fd; border-color: rgba(59,130,246,.35); background: rgba(59,130,246,.12); }
+
+    .top-actions { display: flex; justify-content: space-between; gap: 10px; padding: 18px 18px 0; align-items: start; }
+    .top-actions h2 { font-size: 28px; line-height: 1.05; }
+    .muted { color: var(--muted); }
+
+    .toolbar, .filters { display: flex; gap: 10px; flex-wrap: wrap; padding: 18px; }
+    .toolbar .search { flex: 1 1 260px; }
+    .filters { padding-top: 0; }
+    .filter-btn.active { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+
+    .cards-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 12px; padding: 0 18px 18px;
+      max-height: calc(100vh - 240px); overflow: auto;
+    }
+    .product-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 14px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .product-category { width: fit-content; padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,.08); color: #cbd5e1; font-size: 12px; }
+    .product-name { font-weight: 800; line-height: 1.2; min-height: 38px; }
+    .product-price { font-size: 20px; font-weight: 900; color: #fcd34d; }
+    .product-row { display: flex; gap: 8px; }
+
+    .tabs { display: flex; gap: 10px; }
+    .tab { flex: 1; }
+
+    .order-list, .history-list, .manage-list { display: flex; flex-direction: column; gap: 10px; }
+    .scroll { max-height: 320px; overflow: auto; }
+    .order-item, .history-card, .manage-item {
+      background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 12px;
+    }
+    .order-item-top, .history-top, .manage-top { display: flex; justify-content: space-between; gap: 8px; align-items: start; }
+    .order-item-name { font-weight: 800; }
+    .order-item-sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
+    .qty-row { display: flex; gap: 8px; align-items: center; margin-top: 10px; }
+    .qty { min-width: 26px; text-align: center; font-weight: 900; }
+
+    .summary {
+      background: linear-gradient(135deg, rgba(59,130,246,.12), rgba(34,197,94,.1));
+      border: 1px solid var(--border); border-radius: 22px; padding: 14px;
+    }
+    .sum-row { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 8px; color: var(--muted); }
+    .sum-row.total { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); color: white; font-size: 22px; font-weight: 900; }
+
+    .empty {
+      text-align: center; color: var(--muted); padding: 28px 16px; border: 1px dashed var(--border); border-radius: 20px; background: rgba(255,255,255,.03);
+    }
+
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(2,6,23,.76); display: none; align-items: center; justify-content: center; z-index: 50; padding: 18px;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      width: 100%; max-width: 620px; background: #0f172a; border: 1px solid var(--border); border-radius: 28px; box-shadow: var(--shadow); overflow: hidden;
+    }
+    .modal-head { padding: 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+    .modal-body { padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+    .modal-actions { padding: 0 18px 18px; display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
+
+    .toast-wrap { position: fixed; right: 16px; bottom: 16px; display: flex; flex-direction: column; gap: 10px; z-index: 60; }
+    .toast {
+      background: #111827; border: 1px solid var(--border); color: white; border-radius: 14px; padding: 12px 14px; min-width: 220px; box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 1200px) {
+      .app { grid-template-columns: 300px 1fr; }
+      .right-col { grid-column: 1 / -1; }
+      .sticky { position: static; }
+    }
+    @media (max-width: 860px) {
+      .app { grid-template-columns: 1fr; }
+      .tables-wrap { grid-template-columns: repeat(3,1fr); max-height: none; }
+      .cards-grid { max-height: none; }
+    }
+    @media (max-width: 560px) {
+      body { padding: 10px; }
+      .tables-wrap, .grid-2, .grid-3 { grid-template-columns: repeat(2,1fr); }
+      .cards-grid { grid-template-columns: repeat(2,1fr); padding: 0 12px 12px; }
+      .panel-body, .toolbar, .filters, .top-actions { padding-left: 12px; padding-right: 12px; }
+      .top-actions { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="panel">
+      <div class="panel-body">
+        <div class="header-row">
+          <div>
+            <div class="title">Waiter Pro Max</div>
+            <div class="subtitle">Supabase подключен • HTML версия</div>
+          </div>
+          <div id="dbStatus" class="chip"><span class="dot"></span>Подключение...</div>
+        </div>
+
+        <div class="grid-2" id="statsBox"></div>
+
+        <div style="margin-top:16px;">
+          <div class="label">Столы</div>
+          <div class="control-row">
+            <input id="newTableName" class="input" placeholder="Новый стол" />
+            <button id="addTableBtn" class="btn btn-blue">Добавить</button>
+          </div>
+          <div class="control-row" style="margin-top:10px;">
+            <select id="zoneFilter" class="select">
+              <option>Все зоны</option>
+            </select>
+            <button id="toggleFreeOnlyBtn" class="btn btn-dark">Все столы</button>
+          </div>
+          <div id="tablesWrap" class="tables-wrap"></div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="panel">
+      <div class="top-actions">
+        <div>
+          <div class="label">Меню</div>
+          <h2 id="centerTitle">Выбери стол</h2>
+          <div class="muted" id="centerSubtitle">Добавляй товары одним нажатием</div>
+        </div>
+        <div class="tabs">
+          <button class="btn btn-blue tab" data-tab="order">Заказ</button>
+          <button class="btn btn-dark tab" data-tab="history">История</button>
+        </div>
+      </div>
+
+      <div id="orderTab">
+        <div class="toolbar">
+          <input id="productSearch" class="input search" placeholder="Поиск товара" />
+          <button id="openProductModalBtn" class="btn btn-green">+ Товар</button>
+        </div>
+        <div id="categoryFilters" class="filters"></div>
+        <div id="productsGrid" class="cards-grid"></div>
+      </div>
+
+      <div id="historyTab" style="display:none;">
+        <div class="toolbar">
+          <input id="historySearch" class="input search" placeholder="Поиск по истории" />
+          <button id="clearHistoryBtn" class="btn btn-red">Очистить историю</button>
+        </div>
+        <div class="panel-body" style="padding-top:0;">
+          <div id="historyList" class="history-list scroll"></div>
+        </div>
+      </div>
+    </main>
+
+    <section class="panel right-col">
+      <div class="panel-body sticky">
+        <div class="header-row" style="margin-bottom:14px;">
+          <div>
+            <div class="label">Текущий заказ</div>
+            <div class="title" style="font-size:24px;" id="orderTitle">Стол не выбран</div>
+          </div>
+          <div id="orderStatus" class="status-badge status-free">Свободен</div>
+        </div>
+
+        <div class="control-row" style="margin-bottom:10px;">
+          <input id="guestName" class="input" placeholder="Имя гостя / бронь" />
+        </div>
+        <textarea id="orderNote" class="textarea" placeholder="Комментарий к заказу"></textarea>
+
+        <div style="margin-top:14px; margin-bottom:14px;" class="scroll">
+          <div id="orderList" class="order-list"></div>
+        </div>
+
+        <div class="summary">
+          <div class="sum-row"><span>Позиций</span><strong id="sumCount">0</strong></div>
+          <div class="sum-row"><span>Сумма</span><strong id="sumSubtotal">0 ₽</strong></div>
+          <div class="sum-row">
+            <span>Сервис</span>
+            <select id="servicePercent" class="select" style="width:120px; padding:8px 10px; border-radius:12px;">
+              <option value="0">0%</option>
+              <option value="5">5%</option>
+              <option value="10">10%</option>
+              <option value="15">15%</option>
+            </select>
+          </div>
+          <div class="sum-row total"><span>Итого</span><span id="sumTotal">0 ₽</span></div>
+        </div>
+
+        <div class="grid-2" style="margin-top:14px;">
+          <button id="kitchenBtn" class="btn btn-amber">На кухню</button>
+          <button id="paidBtn" class="btn btn-blue">Оплачен</button>
+          <button id="transferBtn" class="btn btn-dark">Перенести</button>
+          <button id="clearOrderBtn" class="btn btn-red">Очистить</button>
+        </div>
+        <button id="closeOrderBtn" class="btn btn-green" style="width:100%; margin-top:12px;">Закрыть заказ</button>
+      </div>
+    </section>
+  </div>
+
+  <div id="productModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <strong id="productModalTitle">Новый товар</strong>
+        <button class="btn btn-dark small" data-close="productModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <input id="productName" class="input" placeholder="Название товара" />
+        <input id="productPrice" class="input" type="number" min="0" placeholder="Цена" />
+        <select id="productCategory" class="select">
+          <option>Еда</option>
+          <option>Напитки</option>
+          <option>Пиво</option>
+        </select>
+        <label class="pill"><input id="productPopular" type="checkbox" /> Популярный товар</label>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-dark" data-close="productModal">Отмена</button>
+        <button id="saveProductBtn" class="btn btn-green">Сохранить</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="transferModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <strong>Перенос заказа</strong>
+        <button class="btn btn-dark small" data-close="transferModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <select id="transferTarget" class="select"></select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-dark" data-close="transferModal">Отмена</button>
+        <button id="confirmTransferBtn" class="btn btn-blue">Перенести</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-wrap" id="toastWrap"></div>
+
+  <script>
+    const SUPABASE_URL = 'https://kihqjwqyiajsqburfseb.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_B95AUpkoWKAL6KuPZdYCHQ_bcN4cEAY';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const LOCAL_KEY = 'waiter_pro_max_supabase_fallback_v1';
+    const initialState = {
+      tables: [
+        { id: 't1', name: '1', zone: 'Зал', seats: 4 },
+        { id: 't2', name: '2', zone: 'Зал', seats: 4 },
+        { id: 't3', name: '3', zone: 'Зал', seats: 2 },
+        { id: 't4', name: '4', zone: 'Терраса', seats: 4 },
+        { id: 't5', name: 'VIP', zone: 'VIP', seats: 6 },
+        { id: 't6', name: 'Бар', zone: 'Бар', seats: 2 }
+      ],
+      products: [
+        { id: 'p1', name: 'Лагер', price: 250, category: 'Пиво', popular: true },
+        { id: 'p2', name: 'IPA', price: 320, category: 'Пиво', popular: true },
+        { id: 'p3', name: 'Стаут', price: 340, category: 'Пиво', popular: false },
+        { id: 'p4', name: 'Кола', price: 140, category: 'Напитки', popular: true },
+        { id: 'p5', name: 'Морс', price: 160, category: 'Напитки', popular: false },
+        { id: 'p6', name: 'Кофе', price: 170, category: 'Напитки', popular: true },
+        { id: 'p7', name: 'Гренки', price: 180, category: 'Еда', popular: true },
+        { id: 'p8', name: 'Картофель фри', price: 220, category: 'Еда', popular: true },
+        { id: 'p9', name: 'Крылышки', price: 390, category: 'Еда', popular: false },
+        { id: 'p10', name: 'Сэндвич', price: 280, category: 'Еда', popular: false }
+      ],
+      orders: {},
+      history: [],
+      settings: { servicePercent: 0, showOnlyFree: false },
+      selectedTableId: 't1'
+    };
+
+    let state = loadLocal();
+    let activeTab = 'order';
+    let productSearch = '';
+    let historySearch = '';
+    let categoryFilter = 'Все';
+    let zoneFilter = 'Все зоны';
+    let editingProductId = null;
+    let dbReady = false;
+
+    const els = {
+      statsBox: document.getElementById('statsBox'),
+      dbStatus: document.getElementById('dbStatus'),
+      tablesWrap: document.getElementById('tablesWrap'),
+      zoneFilter: document.getElementById('zoneFilter'),
+      toggleFreeOnlyBtn: document.getElementById('toggleFreeOnlyBtn'),
+      newTableName: document.getElementById('newTableName'),
+      addTableBtn: document.getElementById('addTableBtn'),
+      centerTitle: document.getElementById('centerTitle'),
+      centerSubtitle: document.getElementById('centerSubtitle'),
+      productSearch: document.getElementById('productSearch'),
+      categoryFilters: document.getElementById('categoryFilters'),
+      productsGrid: document.getElementById('productsGrid'),
+      orderTitle: document.getElementById('orderTitle'),
+      orderStatus: document.getElementById('orderStatus'),
+      guestName: document.getElementById('guestName'),
+      orderNote: document.getElementById('orderNote'),
+      orderList: document.getElementById('orderList'),
+      servicePercent: document.getElementById('servicePercent'),
+      sumCount: document.getElementById('sumCount'),
+      sumSubtotal: document.getElementById('sumSubtotal'),
+      sumTotal: document.getElementById('sumTotal'),
+      kitchenBtn: document.getElementById('kitchenBtn'),
+      paidBtn: document.getElementById('paidBtn'),
+      transferBtn: document.getElementById('transferBtn'),
+      clearOrderBtn: document.getElementById('clearOrderBtn'),
+      closeOrderBtn: document.getElementById('closeOrderBtn'),
+      historySearch: document.getElementById('historySearch'),
+      historyList: document.getElementById('historyList'),
+      clearHistoryBtn: document.getElementById('clearHistoryBtn'),
+      orderTab: document.getElementById('orderTab'),
+      historyTab: document.getElementById('historyTab'),
+      openProductModalBtn: document.getElementById('openProductModalBtn'),
+      productModal: document.getElementById('productModal'),
+      productModalTitle: document.getElementById('productModalTitle'),
+      productName: document.getElementById('productName'),
+      productPrice: document.getElementById('productPrice'),
+      productCategory: document.getElementById('productCategory'),
+      productPopular: document.getElementById('productPopular'),
+      saveProductBtn: document.getElementById('saveProductBtn'),
+      transferModal: document.getElementById('transferModal'),
+      transferTarget: document.getElementById('transferTarget'),
+      confirmTransferBtn: document.getElementById('confirmTransferBtn'),
+      toastWrap: document.getElementById('toastWrap')
+    };
+
+    bind();
+    renderAll();
+    initSupabase();
+
+    function structuredCloneSafe(obj) {
+      return JSON.parse(JSON.stringify(obj));
+    }
+
+    function loadLocal() {
+      try {
+        const raw = localStorage.getItem(LOCAL_KEY);
+        return raw ? JSON.parse(raw) : structuredCloneSafe(initialState);
+      } catch {
+        return structuredCloneSafe(initialState);
+      }
+    }
+
+    function saveLocal() {
+      localStorage.setItem(LOCAL_KEY, JSON.stringify(state));
+    }
+
+    function uid(prefix) {
+      return prefix + '_' + Math.random().toString(36).slice(2, 11);
+    }
+
+    function rub(v) {
+      return Number(v || 0).toLocaleString('ru-RU') + ' ₽';
+    }
+
+    function currentTable() {
+      return state.tables.find(t => t.id === state.selectedTableId) || null;
+    }
+
+    function ensureCurrentOrder() {
+      if (!state.selectedTableId) return { items: [], paid: false, sentToKitchen: false, guestName: '', note: '' };
+      if (!state.orders[state.selectedTableId]) {
+        state.orders[state.selectedTableId] = { items: [], paid: false, sentToKitchen: false, guestName: '', note: '' };
+      }
+      return state.orders[state.selectedTableId];
+    }
+
+    function orderStatus(order) {
+      if (!order || !order.items.length) return { text: 'Свободен', cls: 'status-free' };
+      if (order.paid) return { text: 'Оплачен', cls: 'status-paid' };
+      if (order.sentToKitchen) return { text: 'Готовится', cls: 'status-kitchen' };
+      return { text: 'Активный', cls: 'status-active' };
+    }
+
+    function bind() {
+      els.addTableBtn.addEventListener('click', addTable);
+      els.newTableName.addEventListener('keydown', e => e.key === 'Enter' && addTable());
+      els.zoneFilter.addEventListener('change', e => { zoneFilter = e.target.value; renderTables(); });
+      els.toggleFreeOnlyBtn.addEventListener('click', async () => {
+        state.settings.showOnlyFree = !state.settings.showOnlyFree;
+        await persistSettings();
+        renderTables();
+        els.toggleFreeOnlyBtn.textContent = state.settings.showOnlyFree ? 'Только свободные' : 'Все столы';
+      });
+
+      document.querySelectorAll('.tab').forEach(btn => {
+        btn.addEventListener('click', () => {
+          activeTab = btn.dataset.tab;
+          document.querySelectorAll('.tab').forEach(x => x.className = 'btn btn-dark tab');
+          btn.className = 'btn btn-blue tab';
+          els.orderTab.style.display = activeTab === 'order' ? '' : 'none';
+          els.historyTab.style.display = activeTab === 'history' ? '' : 'none';
+        });
+      });
+
+      els.productSearch.addEventListener('input', e => { productSearch = e.target.value.toLowerCase(); renderProducts(); });
+      els.historySearch.addEventListener('input', e => { historySearch = e.target.value.toLowerCase(); renderHistory(); });
+      els.guestName.addEventListener('input', debounce(async e => {
+        ensureCurrentOrder().guestName = e.target.value;
+        await upsertOrder(state.selectedTableId);
+      }, 350));
+      els.orderNote.addEventListener('input', debounce(async e => {
+        ensureCurrentOrder().note = e.target.value;
+        await upsertOrder(state.selectedTableId);
+      }, 350));
+      els.servicePercent.addEventListener('change', async e => {
+        state.settings.servicePercent = Number(e.target.value);
+        await persistSettings();
+        renderOrder(); renderTables();
+      });
+
+      els.kitchenBtn.addEventListener('click', async () => {
+        const order = ensureCurrentOrder();
+        order.sentToKitchen = !order.sentToKitchen;
+        await upsertOrder(state.selectedTableId);
+        renderOrder(); renderTables();
+      });
+      els.paidBtn.addEventListener('click', async () => {
+        const order = ensureCurrentOrder();
+        order.paid = !order.paid;
+        await upsertOrder(state.selectedTableId);
+        renderOrder(); renderTables();
+      });
+      els.clearOrderBtn.addEventListener('click', clearOrder);
+      els.closeOrderBtn.addEventListener('click', closeOrder);
+      els.transferBtn.addEventListener('click', openTransferModal);
+      els.confirmTransferBtn.addEventListener('click', transferOrder);
+      els.clearHistoryBtn.addEventListener('click', clearHistory);
+
+      els.openProductModalBtn.addEventListener('click', () => openProductModal());
+      els.saveProductBtn.addEventListener('click', saveProduct);
+
+      document.querySelectorAll('[data-close]').forEach(btn => {
+        btn.addEventListener('click', () => document.getElementById(btn.dataset.close).classList.remove('open'));
+      });
+
+      window.addEventListener('click', e => {
+        if (e.target.classList.contains('modal-backdrop')) e.target.classList.remove('open');
+      });
+    }
+
+    async function initSupabase() {
+      try {
+        setDbStatus('Проверка базы...');
+        const ok = await ensureSchema();
+        if (!ok) {
+          dbReady = false;
+          setDbStatus('Локальный режим');
+          state = loadLocal();
+          if (!state.tables?.length) state.tables = structuredCloneSafe(initialState.tables);
+          if (!state.products?.length) state.products = structuredCloneSafe(initialState.products);
+          if (!state.selectedTableId) state.selectedTableId = state.tables[0]?.id || null;
+          saveLocal();
+          renderAll();
+          toast('Supabase не готов. Работает локальный режим.');
+          return;
+        }
+
+        dbReady = true;
+        setDbStatus('Supabase онлайн');
+        await bootstrapDataIfEmpty();
+        await loadFromSupabase();
+        setupRealtime();
+      } catch (e) {
+        console.error('initSupabase error:', e);
+        dbReady = false;
+        setDbStatus('Ошибка базы');
+        state = loadLocal();
+        if (!state.tables?.length) state.tables = structuredCloneSafe(initialState.tables);
+        if (!state.products?.length) state.products = structuredCloneSafe(initialState.products);
+        if (!state.selectedTableId) state.selectedTableId = state.tables[0]?.id || null;
+        saveLocal();
+        renderAll();
+        toast('Ошибка подключения к Supabase. Включен локальный режим.');
+      }
+    }
+
+    function setDbStatus(text) {
+      els.dbStatus.innerHTML = `<span class="dot"></span>${escapeHtml(text)}`;
+    }
+
+    async function ensureSchema() {
+      try {
+        const checks = await Promise.all([
+          supabase.from('wp_tables').select('id').limit(1),
+          supabase.from('wp_products').select('id').limit(1),
+          supabase.from('wp_orders').select('table_id').limit(1),
+          supabase.from('wp_history').select('id').limit(1),
+          supabase.from('wp_settings').select('id').limit(1)
+        ]);
+        return checks.every(result => !result.error);
+      } catch {
+        return false;
+      }
+    }
+
+    async function bootstrapDataIfEmpty() {
+      try {
+        const [{ count: tablesCount, error: tablesErr }, { count: productsCount, error: productsErr }, settingsRes] = await Promise.all([
+          supabase.from('wp_tables').select('*', { count: 'exact', head: true }),
+          supabase.from('wp_products').select('*', { count: 'exact', head: true }),
+          supabase.from('wp_settings').select('*').eq('id', 'main').maybeSingle()
+        ]);
+
+        if (tablesErr || productsErr || settingsRes.error) {
+          throw new Error('Ошибка проверки стартовых данных');
+        }
+
+        if ((tablesCount ?? 0) === 0) {
+          await supabase.from('wp_tables').insert(initialState.tables.map(t => ({ id: t.id, name: t.name, zone: t.zone, seats: t.seats })));
+        }
+        if ((productsCount ?? 0) === 0) {
+          await supabase.from('wp_products').insert(initialState.products.map(p => ({ id: p.id, name: p.name, price: p.price, category: p.category, popular: p.popular })));
+        }
+        if (!settingsRes.data) {
+          await supabase.from('wp_settings').upsert([{ id: 'main', service_percent: 0, show_only_free: false }], { onConflict: 'id' });
+        }
+      } catch (e) {
+        console.error('bootstrapDataIfEmpty error:', e);
+        throw e;
+      }
+    }
+
+    async function loadFromSupabase() {
+      try {
+        const [{ data: tables, error: tablesErr }, { data: products, error: productsErr }, { data: orders, error: ordersErr }, { data: history, error: historyErr }, { data: settings, error: settingsErr }] = await Promise.all([
+          supabase.from('wp_tables').select('*').order('name'),
+          supabase.from('wp_products').select('*').order('name'),
+          supabase.from('wp_orders').select('*'),
+          supabase.from('wp_history').select('*').order('created_at', { ascending: false }),
+          supabase.from('wp_settings').select('*').eq('id', 'main').maybeSingle()
+        ]);
+
+        if (tablesErr || productsErr || ordersErr || historyErr || settingsErr) {
+          throw new Error('Ошибка чтения данных из Supabase');
+        }
+
+        const nextTables = (tables || []).map(t => ({ id: t.id, name: t.name, zone: t.zone || 'Зал', seats: t.seats || 4 }));
+        const nextProducts = (products || []).map(p => ({ id: p.id, name: p.name, price: p.price || 0, category: p.category || 'Еда', popular: !!p.popular }));
+
+        state.tables = nextTables.length ? nextTables : structuredCloneSafe(initialState.tables);
+        state.products = nextProducts.length ? nextProducts : structuredCloneSafe(initialState.products);
+        state.orders = {};
+
+        (orders || []).forEach(o => {
+          state.orders[o.table_id] = {
+            items: Array.isArray(o.items) ? o.items : [],
+            paid: !!o.paid,
+            sentToKitchen: !!o.sent_to_kitchen,
+            guestName: o.guest_name || '',
+            note: o.note || ''
+          };
+        });
+
+        state.history = (history || []).map(h => ({
+          id: h.id,
+          tableId: h.table_id,
+          tableName: h.table_name,
+          guestName: h.guest_name || '',
+          note: h.note || '',
+          createdAt: h.created_at,
+          items: Array.isArray(h.items) ? h.items : [],
+          total: h.total || 0
+        }));
+
+        if (settings) {
+          state.settings.servicePercent = settings.service_percent || 0;
+          state.settings.showOnlyFree = !!settings.show_only_free;
+        }
+
+        if (!state.selectedTableId || !state.tables.some(t => t.id === state.selectedTableId)) {
+          state.selectedTableId = state.tables[0]?.id || null;
+        }
+
+        saveLocal();
+        renderAll();
+      } catch (e) {
+        console.error('loadFromSupabase error:', e);
+        dbReady = false;
+        setDbStatus('Ошибка базы');
+        if (!state.tables?.length) state.tables = structuredCloneSafe(initialState.tables);
+        if (!state.products?.length) state.products = structuredCloneSafe(initialState.products);
+        if (!state.selectedTableId) state.selectedTableId = state.tables[0]?.id || null;
+        saveLocal();
+        renderAll();
+        toast('Не удалось загрузить данные из Supabase.');
+      }
+    }
+
+    function setupRealtime() {
+      supabase.channel('wp-live')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'wp_tables' }, () => loadFromSupabase())
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'wp_products' }, () => loadFromSupabase())
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'wp_orders' }, () => loadFromSupabase())
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'wp_history' }, () => loadFromSupabase())
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'wp_settings' }, () => loadFromSupabase())
+        .subscribe();
+    }
+
+    async function persistSettings() {
+      saveLocal();
+      if (!dbReady) return;
+      await supabase.from('wp_settings').upsert([{
+        id: 'main',
+        service_percent: state.settings.servicePercent || 0,
+        show_only_free: !!state.settings.showOnlyFree
+      }], { onConflict: 'id' });
+    }
+
+    async function upsertOrder(tableId) {
+      saveLocal();
+      if (!dbReady) return;
+      const order = state.orders[tableId] || { items: [], paid: false, sentToKitchen: false, guestName: '', note: '' };
+      if (!order.items.length && !order.guestName && !order.note && !order.paid && !order.sentToKitchen) {
+        await supabase.from('wp_orders').delete().eq('table_id', tableId);
+        return;
+      }
+      await supabase.from('wp_orders').upsert([{
+        table_id: tableId,
+        items: order.items,
+        paid: !!order.paid,
+        sent_to_kitchen: !!order.sentToKitchen,
+        guest_name: order.guestName || '',
+        note: order.note || ''
+      }], { onConflict: 'table_id' });
+    }
+
+    function renderAll() {
+      renderStats();
+      renderZoneFilter();
+      renderTables();
+      renderCategories();
+      renderProducts();
+      renderOrder();
+      renderHistory();
+      els.servicePercent.value = String(state.settings.servicePercent || 0);
+      els.toggleFreeOnlyBtn.textContent = state.settings.showOnlyFree ? 'Только свободные' : 'Все столы';
+    }
+
+    function renderStats() {
+      const active = Object.values(state.orders).filter(o => o && o.items && o.items.length).length;
+      const html = [
+        ['Столов', state.tables.length],
+        ['Товаров', state.products.length],
+        ['Активных', active],
+        ['История', state.history.length],
+      ].map(([name, value]) => `<div class="stat"><div class="name">${name}</div><div class="value">${value}</div></div>`).join('');
+      els.statsBox.innerHTML = html;
+    }
+
+    function renderZoneFilter() {
+      const zones = ['Все зоны', ...new Set(state.tables.map(t => t.zone))];
+      els.zoneFilter.innerHTML = zones.map(z => `<option ${z === zoneFilter ? 'selected' : ''}>${z}</option>`).join('');
+    }
+
+    function renderTables() {
+      let tables = state.tables.filter(t => zoneFilter === 'Все зоны' || t.zone === zoneFilter);
+      if (state.settings.showOnlyFree) {
+        tables = tables.filter(t => !(state.orders[t.id] && state.orders[t.id].items && state.orders[t.id].items.length));
+      }
+      els.tablesWrap.innerHTML = tables.map(table => {
+        const order = state.orders[table.id] || { items: [] };
+        const status = orderStatus(order);
+        const total = (order.items || []).reduce((s, i) => s + i.price * i.qty, 0);
+        const count = (order.items || []).reduce((s, i) => s + i.qty, 0);
+        return `
+          <button class="table-card ${table.id === state.selectedTableId ? 'active' : ''}" data-table="${table.id}">
+            <div class="table-top">
+              <div>
+                <div class="table-name">${escapeHtml(table.name)}</div>
+                <div class="table-meta">${escapeHtml(table.zone)} • ${table.seats} мест</div>
+              </div>
+              <div class="status-badge ${status.cls}">${status.text}</div>
+            </div>
+            <div class="table-meta" style="margin-top:8px;">${count ? count + ' позиций' : 'Пусто'}</div>
+            <div class="table-total">${rub(total)}</div>
+          </button>
+        `;
+      }).join('') || '<div class="empty" style="grid-column:1/-1;">Нет столов по фильтру</div>';
+
+      els.tablesWrap.querySelectorAll('[data-table]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.selectedTableId = btn.dataset.table;
+          saveLocal();
+          renderTables(); renderOrder();
+        });
+      });
+    }
+
+    function renderCategories() {
+      const categories = ['Все', ...new Set(state.products.map(p => p.category))];
+      els.categoryFilters.innerHTML = categories.map(cat => `
+        <button class="btn ${cat === categoryFilter ? 'btn-blue' : 'btn-dark'} small filter-btn" data-cat="${cat}">${escapeHtml(cat)}</button>
+      `).join('');
+      els.categoryFilters.querySelectorAll('[data-cat]').forEach(btn => {
+        btn.addEventListener('click', () => { categoryFilter = btn.dataset.cat; renderCategories(); renderProducts(); });
+      });
+    }
+
+    function renderProducts() {
+      const products = state.products.filter(p => {
+        const okSearch = !productSearch || p.name.toLowerCase().includes(productSearch);
+        const okCat = categoryFilter === 'Все' || p.category === categoryFilter;
+        return okSearch && okCat;
+      });
+
+      els.productsGrid.innerHTML = products.map(product => `
+        <div class="product-card">
+          <div class="product-category">${escapeHtml(product.category)}${product.popular ? ' • ★' : ''}</div>
+          <div class="product-name">${escapeHtml(product.name)}</div>
+          <div class="product-price">${rub(product.price)}</div>
+          <div class="product-row">
+            <button class="btn btn-green small" data-add-product="${product.id}" style="flex:1;">Добавить</button>
+            <button class="btn btn-dark small" data-edit-product="${product.id}">✎</button>
+            <button class="btn btn-red small" data-del-product="${product.id}">✕</button>
+          </div>
+        </div>
+      `).join('') || '<div class="empty" style="grid-column:1/-1;">Товары не найдены</div>';
+
+      els.productsGrid.querySelectorAll('[data-add-product]').forEach(btn => btn.addEventListener('click', () => addProductToOrder(btn.dataset.addProduct)));
+      els.productsGrid.querySelectorAll('[data-edit-product]').forEach(btn => btn.addEventListener('click', () => openProductModal(btn.dataset.editProduct)));
+      els.productsGrid.querySelectorAll('[data-del-product]').forEach(btn => btn.addEventListener('click', () => deleteProduct(btn.dataset.delProduct)));
+    }
+
+    function renderOrder() {
+      const table = currentTable();
+      const order = ensureCurrentOrder();
+      const status = orderStatus(order);
+      els.orderTitle.textContent = table ? 'Стол ' + table.name : 'Стол не выбран';
+      els.orderStatus.className = 'status-badge ' + status.cls;
+      els.orderStatus.textContent = status.text;
+      els.centerTitle.textContent = table ? 'Стол ' + table.name : 'Выбери стол';
+      els.centerSubtitle.textContent = table ? `${table.zone}, ${table.seats} мест` : 'Добавляй товары одним нажатием';
+      els.guestName.value = order.guestName || '';
+      els.orderNote.value = order.note || '';
+
+      if (!order.items.length) {
+        els.orderList.innerHTML = '<div class="empty">Заказ пуст. Добавь товары из меню.</div>';
+      } else {
+        els.orderList.innerHTML = order.items.map(item => `
+          <div class="order-item">
+            <div class="order-item-top">
+              <div>
+                <div class="order-item-name">${escapeHtml(item.name)}</div>
+                <div class="order-item-sub">${rub(item.price)} × ${item.qty} = ${rub(item.price * item.qty)}</div>
+              </div>
+              <div style="font-weight:900; color:#86efac;">${rub(item.price * item.qty)}</div>
+            </div>
+            <div class="qty-row">
+              <button class="btn btn-dark small" data-dec="${item.productId}">-</button>
+              <div class="qty">${item.qty}</div>
+              <button class="btn btn-dark small" data-inc="${item.productId}">+</button>
+            </div>
+          </div>
+        `).join('');
+
+        els.orderList.querySelectorAll('[data-inc]').forEach(btn => btn.addEventListener('click', () => changeQty(btn.dataset.inc, 1)));
+        els.orderList.querySelectorAll('[data-dec]').forEach(btn => btn.addEventListener('click', () => changeQty(btn.dataset.dec, -1)));
+      }
+
+      const count = order.items.reduce((s, i) => s + i.qty, 0);
+      const subtotal = order.items.reduce((s, i) => s + i.price * i.qty, 0);
+      const total = subtotal + Math.round(subtotal * ((state.settings.servicePercent || 0) / 100));
+      els.sumCount.textContent = count;
+      els.sumSubtotal.textContent = rub(subtotal);
+      els.sumTotal.textContent = rub(total);
+      renderTables();
+      renderStats();
+    }
+
+    function renderHistory() {
+      const items = state.history.filter(entry => {
+        const searchBase = [entry.tableName, entry.guestName || '', ...entry.items.map(i => i.name)].join(' ').toLowerCase();
+        return !historySearch || searchBase.includes(historySearch);
+      });
+
+      els.historyList.innerHTML = items.map(entry => `
+        <div class="history-card">
+          <div class="history-top">
+            <div>
+              <div class="order-item-name">Стол ${escapeHtml(entry.tableName)}</div>
+              <div class="order-item-sub">${formatDate(entry.createdAt)}${entry.guestName ? ' • ' + escapeHtml(entry.guestName) : ''}</div>
+            </div>
+            <div style="font-weight:900; color:#fcd34d;">${rub(entry.total)}</div>
+          </div>
+          <div style="margin-top:10px; display:flex; flex-direction:column; gap:6px;">
+            ${entry.items.map(item => `<div class="order-item-sub" style="display:flex; justify-content:space-between; gap:8px;"><span>${escapeHtml(item.name)} × ${item.qty}</span><strong>${rub(item.price * item.qty)}</strong></div>`).join('')}
+          </div>
+          ${entry.note ? `<div class="order-item-sub" style="margin-top:8px;">Комментарий: ${escapeHtml(entry.note)}</div>` : ''}
+          <div class="product-row" style="margin-top:10px;">
+            <button class="btn btn-blue small" data-repeat="${entry.id}">Повторить</button>
+            <button class="btn btn-red small" data-del-history="${entry.id}">Удалить</button>
+          </div>
+        </div>
+      `).join('') || '<div class="empty">История пока пустая</div>';
+
+      els.historyList.querySelectorAll('[data-repeat]').forEach(btn => btn.addEventListener('click', () => repeatHistory(btn.dataset.repeat)));
+      els.historyList.querySelectorAll('[data-del-history]').forEach(btn => btn.addEventListener('click', () => deleteHistory(btn.dataset.delHistory)));
+    }
+
+    async function addTable() {
+      const name = els.newTableName.value.trim();
+      if (!name) return toast('Введите название стола');
+      const table = { id: uid('t'), name, zone: 'Зал', seats: 4 };
+      state.tables.push(table);
+      els.newTableName.value = '';
+      saveLocal();
+      if (dbReady) {
+        const { error } = await supabase.from('wp_tables').insert([table]);
+        if (error) toast('Ошибка сохранения стола');
+      }
+      renderZoneFilter(); renderTables(); renderStats(); toast('Стол добавлен');
+    }
+
+    async function addProductToOrder(productId) {
+      const product = state.products.find(p => p.id === productId);
+      if (!product) return;
+      const order = ensureCurrentOrder();
+      const existing = order.items.find(i => i.productId === productId);
+      if (existing) existing.qty += 1;
+      else order.items.push({ productId, name: product.name, price: product.price, qty: 1, category: product.category });
+      order.paid = false;
+      await upsertOrder(state.selectedTableId);
+      renderOrder(); toast('Товар добавлен');
+    }
+
+    async function changeQty(productId, diff) {
+      const order = ensureCurrentOrder();
+      const item = order.items.find(i => i.productId === productId);
+      if (!item) return;
+      item.qty += diff;
+      order.items = order.items.filter(i => i.qty > 0);
+      await upsertOrder(state.selectedTableId);
+      renderOrder();
+    }
+
+    async function clearOrder() {
+      const order = ensureCurrentOrder();
+      if (!order.items.length) return toast('Заказ уже пустой');
+      if (!confirm('Очистить заказ?')) return;
+      state.orders[state.selectedTableId] = { items: [], paid: false, sentToKitchen: false, guestName: '', note: '' };
+      await upsertOrder(state.selectedTableId);
+      renderOrder(); toast('Заказ очищен');
+    }
+
+    async function closeOrder() {
+      const table = currentTable();
+      const order = ensureCurrentOrder();
+      if (!table || !order.items.length) return toast('Заказ пустой');
+      const subtotal = order.items.reduce((s, i) => s + i.price * i.qty, 0);
+      const total = subtotal + Math.round(subtotal * ((state.settings.servicePercent || 0) / 100));
+      const historyItem = {
+        id: uid('h'),
+        table_id: table.id,
+        table_name: table.name,
+        guest_name: order.guestName || '',
+        note: order.note || '',
+        created_at: new Date().toISOString(),
+        items: structuredCloneSafe(order.items),
+        total
+      };
+      state.history.unshift({
+        id: historyItem.id,
+        tableId: historyItem.table_id,
+        tableName: historyItem.table_name,
+        guestName: historyItem.guest_name,
+        note: historyItem.note,
+        createdAt: historyItem.created_at,
+        items: historyItem.items,
+        total: historyItem.total
+      });
+      state.orders[state.selectedTableId] = { items: [], paid: false, sentToKitchen: false, guestName: '', note: '' };
+      saveLocal();
+      if (dbReady) {
+        await supabase.from('wp_history').insert([historyItem]);
+        await supabase.from('wp_orders').delete().eq('table_id', state.selectedTableId);
+      }
+      renderOrder(); renderHistory(); renderStats(); toast('Заказ закрыт');
+      document.querySelector('[data-tab="history"]').click();
+    }
+
+    function openTransferModal() {
+      const order = ensureCurrentOrder();
+      if (!order.items.length) return toast('Нечего переносить');
+      els.transferTarget.innerHTML = state.tables
+        .filter(t => t.id !== state.selectedTableId)
+        .map(t => `<option value="${t.id}">Стол ${escapeHtml(t.name)} • ${escapeHtml(t.zone)}</option>`).join('');
+      if (!els.transferTarget.value && state.tables.length > 1) els.transferTarget.value = state.tables.find(t => t.id !== state.selectedTableId)?.id || '';
+      els.transferModal.classList.add('open');
+    }
+
+    async function transferOrder() {
+      const targetId = els.transferTarget.value;
+      if (!targetId || targetId === state.selectedTableId) return;
+      const source = ensureCurrentOrder();
+      const dest = state.orders[targetId] || { items: [], paid: false, sentToKitchen: false, guestName: '', note: '' };
+      dest.items = [...dest.items, ...source.items];
+      if (!dest.guestName) dest.guestName = source.guestName || '';
+      if (!dest.note) dest.note = source.note || '';
+      state.orders[targetId] = dest;
+      state.orders[state.selectedTableId] = { items: [], paid: false, sentToKitchen: false, guestName: '', note: '' };
+      saveLocal();
+      if (dbReady) {
+        await upsertOrder(targetId);
+        await supabase.from('wp_orders').delete().eq('table_id', state.selectedTableId);
+      }
+      state.selectedTableId = targetId;
+      els.transferModal.classList.remove('open');
+      renderOrder(); renderTables(); toast('Заказ перенесён');
+    }
+
+    function openProductModal(productId = null) {
+      editingProductId = productId;
+      if (productId) {
+        const p = state.products.find(x => x.id === productId);
+        if (!p) return;
+        els.productModalTitle.textContent = 'Редактировать товар';
+        els.productName.value = p.name;
+        els.productPrice.value = p.price;
+        els.productCategory.value = p.category;
+        els.productPopular.checked = !!p.popular;
+      } else {
+        els.productModalTitle.textContent = 'Новый товар';
+        els.productName.value = '';
+        els.productPrice.value = '';
+        els.productCategory.value = 'Еда';
+        els.productPopular.checked = false;
+      }
+      els.productModal.classList.add('open');
+    }
+
+    async function saveProduct() {
+      const name = els.productName.value.trim();
+      const price = Number(els.productPrice.value);
+      const category = els.productCategory.value;
+      const popular = els.productPopular.checked;
+      if (!name) return toast('Введите название товара');
+      if (!Number.isFinite(price) || price < 0) return toast('Введите корректную цену');
+
+      if (editingProductId) {
+        const p = state.products.find(x => x.id === editingProductId);
+        if (p) {
+          p.name = name; p.price = price; p.category = category; p.popular = popular;
+          if (dbReady) {
+            await supabase.from('wp_products').update({ name, price, category, popular }).eq('id', editingProductId);
+          }
+        }
+      } else {
+        const product = { id: uid('p'), name, price, category, popular };
+        state.products.unshift(product);
+        if (dbReady) {
+          await supabase.from('wp_products').insert([product]);
+        }
+      }
+      saveLocal(); renderCategories(); renderProducts(); renderOrder(); renderStats();
+      els.productModal.classList.remove('open');
+      toast(editingProductId ? 'Товар обновлён' : 'Товар добавлен');
+    }
+
+    async function deleteProduct(productId) {
+      if (!confirm('Удалить товар?')) return;
+      state.products = state.products.filter(p => p.id !== productId);
+      Object.values(state.orders).forEach(order => {
+        order.items = (order.items || []).filter(i => i.productId !== productId);
+      });
+      saveLocal();
+      if (dbReady) {
+        await supabase.from('wp_products').delete().eq('id', productId);
+        for (const tableId of Object.keys(state.orders)) {
+          await upsertOrder(tableId);
+        }
+      }
+      renderCategories(); renderProducts(); renderOrder(); renderStats(); toast('Товар удалён');
+    }
+
+    async function repeatHistory(historyId) {
+      const entry = state.history.find(h => h.id === historyId);
+      if (!entry) return;
+      state.orders[state.selectedTableId] = {
+        items: structuredCloneSafe(entry.items),
+        paid: false,
+        sentToKitchen: false,
+        guestName: entry.guestName || '',
+        note: entry.note || ''
+      };
+      await upsertOrder(state.selectedTableId);
+      renderOrder(); toast('Заказ повторён');
+      document.querySelector('[data-tab="order"]').click();
+    }
+
+    async function deleteHistory(historyId) {
+      if (!confirm('Удалить запись из истории?')) return;
+      state.history = state.history.filter(h => h.id !== historyId);
+      saveLocal();
+      if (dbReady) await supabase.from('wp_history').delete().eq('id', historyId);
+      renderHistory(); renderStats(); toast('Запись удалена');
+    }
+
+    async function clearHistory() {
+      if (!state.history.length) return toast('История уже пустая');
+      if (!confirm('Удалить всю историю?')) return;
+      state.history = [];
+      saveLocal();
+      if (dbReady) await supabase.from('wp_history').delete().neq('id', '');
+      renderHistory(); renderStats();
+      toast('История очищена');
+    }
+
+    function formatDate(iso) {
+      return new Intl.DateTimeFormat('ru-RU', {
+        day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
+      }).format(new Date(iso));
+    }
+
+    function debounce(fn, delay) {
+      let timer;
+      return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn(...args), delay);
+      };
+    }
+
+    function toast(text) {
+      const el = document.createElement('div');
+      el.className = 'toast';
+      el.textContent = text;
+      els.toastWrap.appendChild(el);
+      setTimeout(() => el.remove(), 2500);
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+  </script>
+</body>
+</html>
