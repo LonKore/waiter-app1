@@ -10,9 +10,8 @@
     :root {
       --bg: #07111f;
       --panel: rgba(12, 21, 39, 0.95);
-      --card: rgba(255, 255, 255, 0.06);
-      --card-2: rgba(255, 255, 255, 0.04);
-      --border: rgba(255, 255, 255, 0.10);
+      --card: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.10);
       --text: #f8fafc;
       --muted: #94a3b8;
       --green: #10b981;
@@ -20,17 +19,13 @@
       --amber: #f59e0b;
       --red: #ef4444;
       --violet: #8b5cf6;
-      --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      --shadow: 0 20px 50px rgba(0,0,0,.35);
       --radius-xl: 28px;
       --radius-lg: 20px;
       --radius-md: 14px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -61,14 +56,8 @@
       overflow: hidden;
     }
 
-    .panel-body {
-      padding: 18px;
-    }
-
-    .sticky {
-      position: sticky;
-      top: 16px;
-    }
+    .panel-body { padding: 18px; }
+    .sticky { position: sticky; top: 16px; }
 
     .header-row {
       display: flex;
@@ -92,8 +81,7 @@
       line-height: 1.4;
     }
 
-    .chip,
-    .status-badge {
+    .chip, .status-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -122,9 +110,7 @@
       margin-bottom: 10px;
     }
 
-    .muted {
-      color: var(--muted);
-    }
+    .muted { color: var(--muted); }
 
     .grid-2 {
       display: grid;
@@ -158,17 +144,11 @@
       flex-wrap: wrap;
     }
 
-    .control-row > * {
-      flex: 1;
-    }
+    .control-row > * { flex: 1; }
 
-    input, select, textarea, button {
-      font: inherit;
-    }
+    input, select, textarea, button { font: inherit; }
 
-    .input,
-    .select,
-    .textarea {
+    .input, .select, .textarea {
       width: 100%;
       background: rgba(255,255,255,0.06);
       border: 1px solid var(--border);
@@ -178,20 +158,9 @@
       outline: none;
     }
 
-    .input::placeholder,
-    .textarea::placeholder {
-      color: #75839c;
-    }
-
-    .textarea {
-      min-height: 82px;
-      resize: vertical;
-    }
-
-    .select option {
-      background: #0f172a;
-      color: #fff;
-    }
+    .input::placeholder, .textarea::placeholder { color: #75839c; }
+    .textarea { min-height: 82px; resize: vertical; }
+    .select option { background: #0f172a; color: #fff; }
 
     .btn {
       border: none;
@@ -207,27 +176,15 @@
       gap: 8px;
     }
 
-    .btn:hover {
-      transform: translateY(-1px);
-    }
-
-    .btn:active {
-      transform: translateY(0);
-    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
 
     .btn-green { background: linear-gradient(135deg, #10b981, #059669); }
     .btn-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
     .btn-red { background: linear-gradient(135deg, #ef4444, #dc2626); }
     .btn-amber { background: linear-gradient(135deg, #f59e0b, #d97706); }
-    .btn-dark {
-      background: rgba(255,255,255,0.07);
-      border: 1px solid var(--border);
-    }
-    .btn.small {
-      padding: 9px 12px;
-      border-radius: 12px;
-      font-size: 13px;
-    }
+    .btn-dark { background: rgba(255,255,255,0.07); border: 1px solid var(--border); }
+    .btn.small { padding: 9px 12px; border-radius: 12px; font-size: 13px; }
 
     .tables-wrap {
       margin-top: 14px;
@@ -248,14 +205,8 @@
       transition: .18s ease;
     }
 
-    .table-card:hover {
-      transform: translateY(-2px);
-    }
-
-    .table-card.active {
-      border-color: rgba(59,130,246,.55);
-      background: rgba(59,130,246,.14);
-    }
+    .table-card:hover { transform: translateY(-2px); }
+    .table-card.active { border-color: rgba(59,130,246,.55); background: rgba(59,130,246,.14); }
 
     .table-top {
       display: flex;
@@ -264,46 +215,14 @@
       gap: 8px;
     }
 
-    .table-name {
-      font-size: 18px;
-      font-weight: 900;
-    }
+    .table-name { font-size: 18px; font-weight: 900; }
+    .table-meta { color: var(--muted); font-size: 12px; margin-top: 4px; }
+    .table-total { margin-top: 10px; color: #86efac; font-weight: 900; }
 
-    .table-meta {
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 4px;
-    }
-
-    .table-total {
-      margin-top: 10px;
-      color: #86efac;
-      font-weight: 900;
-    }
-
-    .status-free {
-      color: #86efac;
-      border-color: rgba(16,185,129,.35);
-      background: rgba(16,185,129,.12);
-    }
-
-    .status-active {
-      color: #c4b5fd;
-      border-color: rgba(139,92,246,.35);
-      background: rgba(139,92,246,.12);
-    }
-
-    .status-kitchen {
-      color: #fcd34d;
-      border-color: rgba(245,158,11,.35);
-      background: rgba(245,158,11,.12);
-    }
-
-    .status-paid {
-      color: #93c5fd;
-      border-color: rgba(59,130,246,.35);
-      background: rgba(59,130,246,.12);
-    }
+    .status-free { color: #86efac; border-color: rgba(16,185,129,.35); background: rgba(16,185,129,.12); }
+    .status-active { color: #c4b5fd; border-color: rgba(139,92,246,.35); background: rgba(139,92,246,.12); }
+    .status-kitchen { color: #fcd34d; border-color: rgba(245,158,11,.35); background: rgba(245,158,11,.12); }
+    .status-paid { color: #93c5fd; border-color: rgba(59,130,246,.35); background: rgba(59,130,246,.12); }
 
     .top-actions {
       display: flex;
@@ -313,35 +232,20 @@
       padding: 18px 18px 0;
     }
 
-    .top-actions h2 {
-      font-size: 28px;
-      line-height: 1.05;
-    }
+    .top-actions h2 { font-size: 28px; line-height: 1.05; }
 
-    .tabs {
-      display: flex;
-      gap: 10px;
-    }
+    .tabs { display: flex; gap: 10px; }
+    .tab { flex: 1; }
 
-    .tab {
-      flex: 1;
-    }
-
-    .toolbar,
-    .filters {
+    .toolbar, .filters {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
       padding: 18px;
     }
 
-    .filters {
-      padding-top: 0;
-    }
-
-    .toolbar .search {
-      flex: 1 1 260px;
-    }
+    .filters { padding-top: 0; }
+    .toolbar .search { flex: 1 1 260px; }
 
     .cards-grid {
       display: grid;
@@ -383,48 +287,32 @@
       color: #fcd34d;
     }
 
-    .product-row {
-      display: flex;
-      gap: 8px;
-    }
+    .product-row { display: flex; gap: 8px; }
 
-    .scroll {
-      max-height: 330px;
-      overflow: auto;
-    }
+    .scroll { max-height: 330px; overflow: auto; }
 
-    .order-list,
-    .history-list {
+    .order-list, .history-list {
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
 
-    .order-item,
-    .history-card {
+    .order-item, .history-card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 20px;
       padding: 12px;
     }
 
-    .order-item-top,
-    .history-top {
+    .order-item-top, .history-top {
       display: flex;
       justify-content: space-between;
       gap: 8px;
       align-items: start;
     }
 
-    .order-item-name {
-      font-weight: 800;
-    }
-
-    .order-item-sub {
-      color: var(--muted);
-      font-size: 13px;
-      margin-top: 4px;
-    }
+    .order-item-name { font-weight: 800; }
+    .order-item-sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
 
     .qty-row {
       display: flex;
@@ -483,9 +371,7 @@
       padding: 18px;
     }
 
-    .modal-backdrop.open {
-      display: flex;
-    }
+    .modal-backdrop.open { display: flex; }
 
     .modal {
       width: 100%;
@@ -541,60 +427,23 @@
     }
 
     @media (max-width: 1200px) {
-      .app {
-        grid-template-columns: 300px 1fr;
-      }
-
-      .right-col {
-        grid-column: 1 / -1;
-      }
-
-      .sticky {
-        position: static;
-      }
+      .app { grid-template-columns: 300px 1fr; }
+      .right-col { grid-column: 1 / -1; }
+      .sticky { position: static; }
     }
 
     @media (max-width: 860px) {
-      .app {
-        grid-template-columns: 1fr;
-      }
-
-      .tables-wrap {
-        grid-template-columns: repeat(3, 1fr);
-        max-height: none;
-      }
-
-      .cards-grid {
-        max-height: none;
-      }
+      .app { grid-template-columns: 1fr; }
+      .tables-wrap { grid-template-columns: repeat(3, 1fr); max-height: none; }
+      .cards-grid { max-height: none; }
     }
 
     @media (max-width: 560px) {
-      body {
-        padding: 10px;
-      }
-
-      .tables-wrap,
-      .grid-2 {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .cards-grid {
-        grid-template-columns: repeat(2, 1fr);
-        padding: 0 12px 12px;
-      }
-
-      .panel-body,
-      .toolbar,
-      .filters,
-      .top-actions {
-        padding-left: 12px;
-        padding-right: 12px;
-      }
-
-      .top-actions {
-        flex-direction: column;
-      }
+      body { padding: 10px; }
+      .tables-wrap, .grid-2 { grid-template-columns: repeat(2, 1fr); }
+      .cards-grid { grid-template-columns: repeat(2, 1fr); padding: 0 12px 12px; }
+      .panel-body, .toolbar, .filters, .top-actions { padding-left: 12px; padding-right: 12px; }
+      .top-actions { flex-direction: column; }
     }
   </style>
 </head>
@@ -614,19 +463,16 @@
 
         <div style="margin-top:16px;">
           <div class="label">Столы</div>
-
           <div class="control-row">
             <input id="newTableName" class="input" placeholder="Новый стол" />
             <button id="addTableBtn" class="btn btn-blue">Добавить</button>
           </div>
-
           <div class="control-row" style="margin-top:10px;">
             <select id="zoneFilter" class="select">
               <option>Все зоны</option>
             </select>
             <button id="toggleFreeOnlyBtn" class="btn btn-dark">Все столы</button>
           </div>
-
           <div id="tablesWrap" class="tables-wrap"></div>
         </div>
       </div>
@@ -639,7 +485,6 @@
           <h2 id="centerTitle">Выбери стол</h2>
           <div id="centerSubtitle" class="muted">Добавляй товары одним нажатием</div>
         </div>
-
         <div class="tabs">
           <button class="btn btn-blue tab" data-tab="order">Заказ</button>
           <button class="btn btn-dark tab" data-tab="history">История</button>
@@ -651,7 +496,6 @@
           <input id="productSearch" class="input search" placeholder="Поиск товара" />
           <button id="openProductModalBtn" class="btn btn-green">+ Товар</button>
         </div>
-
         <div id="categoryFilters" class="filters"></div>
         <div id="productsGrid" class="cards-grid"></div>
       </div>
@@ -661,7 +505,6 @@
           <input id="historySearch" class="input search" placeholder="Поиск по истории" />
           <button id="clearHistoryBtn" class="btn btn-red">Очистить историю</button>
         </div>
-
         <div class="panel-body" style="padding-top:0;">
           <div id="historyList" class="history-list scroll"></div>
         </div>
@@ -764,7 +607,7 @@
     const SUPABASE_KEY = 'sb_publishable_B95AUpkoWKAL6KuPZdYCHQ_bcN4cEAY';
     const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const LOCAL_KEY = 'waiter_pro_max_fallback_v3';
+    const LOCAL_KEY = 'waiter_pro_max_fallback_v4';
 
     const initialState = {
       tables: [
@@ -804,6 +647,7 @@
     let categoryFilter = 'Все';
     let zoneFilter = 'Все зоны';
     let editingProductId = null;
+    let liveChannel = null;
 
     const els = {
       statsBox: document.getElementById('statsBox'),
@@ -813,14 +657,11 @@
       toggleFreeOnlyBtn: document.getElementById('toggleFreeOnlyBtn'),
       newTableName: document.getElementById('newTableName'),
       addTableBtn: document.getElementById('addTableBtn'),
-
       centerTitle: document.getElementById('centerTitle'),
       centerSubtitle: document.getElementById('centerSubtitle'),
-
       productSearch: document.getElementById('productSearch'),
       categoryFilters: document.getElementById('categoryFilters'),
       productsGrid: document.getElementById('productsGrid'),
-
       orderTitle: document.getElementById('orderTitle'),
       orderStatus: document.getElementById('orderStatus'),
       guestName: document.getElementById('guestName'),
@@ -830,20 +671,16 @@
       sumCount: document.getElementById('sumCount'),
       sumSubtotal: document.getElementById('sumSubtotal'),
       sumTotal: document.getElementById('sumTotal'),
-
       kitchenBtn: document.getElementById('kitchenBtn'),
       paidBtn: document.getElementById('paidBtn'),
       transferBtn: document.getElementById('transferBtn'),
       clearOrderBtn: document.getElementById('clearOrderBtn'),
       closeOrderBtn: document.getElementById('closeOrderBtn'),
-
       historySearch: document.getElementById('historySearch'),
       historyList: document.getElementById('historyList'),
       clearHistoryBtn: document.getElementById('clearHistoryBtn'),
-
       orderTab: document.getElementById('orderTab'),
       historyTab: document.getElementById('historyTab'),
-
       openProductModalBtn: document.getElementById('openProductModalBtn'),
       productModal: document.getElementById('productModal'),
       productModalTitle: document.getElementById('productModalTitle'),
@@ -852,11 +689,9 @@
       productCategory: document.getElementById('productCategory'),
       productPopular: document.getElementById('productPopular'),
       saveProductBtn: document.getElementById('saveProductBtn'),
-
       transferModal: document.getElementById('transferModal'),
       transferTarget: document.getElementById('transferTarget'),
       confirmTransferBtn: document.getElementById('confirmTransferBtn'),
-
       toastWrap: document.getElementById('toastWrap')
     };
 
@@ -924,30 +759,16 @@
     }
 
     function currentTable() {
-      return state.tables.find(t => t.id === state.selectedTableId) || null;
+      return state.tables.find((t) => t.id === state.selectedTableId) || null;
     }
 
     function ensureCurrentOrder() {
       if (!state.selectedTableId) {
-        return {
-          items: [],
-          paid: false,
-          sentToKitchen: false,
-          guestName: '',
-          note: ''
-        };
+        return { items: [], paid: false, sentToKitchen: false, guestName: '', note: '' };
       }
-
       if (!state.orders[state.selectedTableId]) {
-        state.orders[state.selectedTableId] = {
-          items: [],
-          paid: false,
-          sentToKitchen: false,
-          guestName: '',
-          note: ''
-        };
+        state.orders[state.selectedTableId] = { items: [], paid: false, sentToKitchen: false, guestName: '', note: '' };
       }
-
       return state.orders[state.selectedTableId];
     }
 
@@ -979,9 +800,7 @@
       document.querySelectorAll('.tab').forEach((btn) => {
         btn.addEventListener('click', () => {
           activeTab = btn.getAttribute('data-tab');
-          document.querySelectorAll('.tab').forEach((x) => {
-            x.className = 'btn btn-dark tab';
-          });
+          document.querySelectorAll('.tab').forEach((x) => x.className = 'btn btn-dark tab');
           btn.className = 'btn btn-blue tab';
           els.orderTab.style.display = activeTab === 'order' ? '' : 'none';
           els.historyTab.style.display = activeTab === 'history' ? '' : 'none';
@@ -1035,9 +854,7 @@
       els.closeOrderBtn.addEventListener('click', closeOrder);
       els.transferBtn.addEventListener('click', openTransferModal);
       els.confirmTransferBtn.addEventListener('click', transferOrder);
-
       els.clearHistoryBtn.addEventListener('click', clearHistory);
-
       els.openProductModalBtn.addEventListener('click', () => openProductModal());
       els.saveProductBtn.addEventListener('click', saveProduct);
 
@@ -1233,7 +1050,14 @@
     }
 
     function setupRealtime() {
-      sb.channel('waiter-live')
+      if (liveChannel) {
+        try {
+          sb.removeChannel(liveChannel);
+        } catch {}
+      }
+
+      liveChannel = sb
+        .channel('waiter-live-' + Date.now())
         .on('postgres_changes', { event: '*', schema: 'public', table: 'wp_tables' }, () => loadFromSupabase())
         .on('postgres_changes', { event: '*', schema: 'public', table: 'wp_products' }, () => loadFromSupabase())
         .on('postgres_changes', { event: '*', schema: 'public', table: 'wp_orders' }, () => loadFromSupabase())
@@ -1479,7 +1303,6 @@
             </div>
             <div style="font-weight:900; color:#fcd34d;">${rub(entry.total)}</div>
           </div>
-
           <div style="margin-top:10px; display:flex; flex-direction:column; gap:6px;">
             ${entry.items.map((item) => `
               <div class="order-item-sub" style="display:flex; justify-content:space-between; gap:8px;">
@@ -1488,9 +1311,7 @@
               </div>
             `).join('')}
           </div>
-
           ${entry.note ? `<div class="order-item-sub" style="margin-top:8px;">Комментарий: ${escapeHtml(entry.note)}</div>` : ''}
-
           <div class="product-row" style="margin-top:10px;">
             <button class="btn btn-blue small" data-repeat="${entry.id}">Повторить</button>
             <button class="btn btn-red small" data-del-history="${entry.id}">Удалить</button>
@@ -1509,18 +1330,9 @@
 
     async function addTable() {
       const name = els.newTableName.value.trim();
-      if (!name) {
-        toast('Введите название стола');
-        return;
-      }
+      if (!name) return toast('Введите название стола');
 
-      const table = {
-        id: uid('t'),
-        name,
-        zone: 'Зал',
-        seats: 4
-      };
-
+      const table = { id: uid('t'), name, zone: 'Зал', seats: 4 };
       state.tables.push(table);
       els.newTableName.value = '';
       saveLocal();
@@ -1546,9 +1358,8 @@
       const order = ensureCurrentOrder();
       const existing = order.items.find((i) => i.productId === productId);
 
-      if (existing) {
-        existing.qty += 1;
-      } else {
+      if (existing) existing.qty += 1;
+      else {
         order.items.push({
           productId,
           name: product.name,
@@ -1578,11 +1389,7 @@
 
     async function clearOrder() {
       const order = ensureCurrentOrder();
-      if (!order.items.length) {
-        toast('Заказ уже пустой');
-        return;
-      }
-
+      if (!order.items.length) return toast('Заказ уже пустой');
       if (!confirm('Очистить заказ?')) return;
 
       state.orders[state.selectedTableId] = {
@@ -1601,11 +1408,7 @@
     async function closeOrder() {
       const table = currentTable();
       const order = ensureCurrentOrder();
-
-      if (!table || !order.items.length) {
-        toast('Заказ пустой');
-        return;
-      }
+      if (!table || !order.items.length) return toast('Заказ пустой');
 
       const subtotal = order.items.reduce((sum, item) => sum + item.price * item.qty, 0);
       const total = subtotal + Math.round(subtotal * ((state.settings.servicePercent || 0) / 100));
@@ -1643,11 +1446,10 @@
       saveLocal();
 
       if (dbReady) {
-        const insertRes = await sb.from('wp_history').insert([historyDb]);
-        const deleteRes = await sb.from('wp_orders').delete().eq('table_id', state.selectedTableId);
-
-        if (insertRes.error) console.error(insertRes.error);
-        if (deleteRes.error) console.error(deleteRes.error);
+        const r1 = await sb.from('wp_history').insert([historyDb]);
+        const r2 = await sb.from('wp_orders').delete().eq('table_id', state.selectedTableId);
+        if (r1.error) console.error(r1.error);
+        if (r2.error) console.error(r2.error);
       }
 
       renderOrder();
@@ -1659,10 +1461,7 @@
 
     function openTransferModal() {
       const order = ensureCurrentOrder();
-      if (!order.items.length) {
-        toast('Нечего переносить');
-        return;
-      }
+      if (!order.items.length) return toast('Нечего переносить');
 
       els.transferTarget.innerHTML = state.tables
         .filter((t) => t.id !== state.selectedTableId)
@@ -1708,7 +1507,8 @@
 
       if (dbReady) {
         await upsertOrder(targetId);
-        await sb.from('wp_orders').delete().eq('table_id', sourceId);
+        const { error } = await sb.from('wp_orders').delete().eq('table_id', sourceId);
+        if (error) console.error(error);
       }
 
       state.selectedTableId = targetId;
@@ -1724,7 +1524,6 @@
       if (productId) {
         const p = state.products.find((x) => x.id === productId);
         if (!p) return;
-
         els.productModalTitle.textContent = 'Редактировать товар';
         els.productName.value = p.name;
         els.productPrice.value = p.price;
@@ -1747,15 +1546,8 @@
       const category = els.productCategory.value;
       const popular = els.productPopular.checked;
 
-      if (!name) {
-        toast('Введите название товара');
-        return;
-      }
-
-      if (!Number.isFinite(price) || price < 0) {
-        toast('Введите корректную цену');
-        return;
-      }
+      if (!name) return toast('Введите название товара');
+      if (!Number.isFinite(price) || price < 0) return toast('Введите корректную цену');
 
       if (editingProductId) {
         const p = state.products.find((x) => x.id === editingProductId);
@@ -1766,22 +1558,14 @@
           p.popular = popular;
 
           if (dbReady) {
-            const { error } = await sb
-              .from('wp_products')
-              .update({ name, price, category, popular })
-              .eq('id', editingProductId);
+            const { error } = await sb.from('wp_products').update({
+              name, price, category, popular
+            }).eq('id', editingProductId);
             if (error) console.error(error);
           }
         }
       } else {
-        const product = {
-          id: uid('p'),
-          name,
-          price,
-          category,
-          popular
-        };
-
+        const product = { id: uid('p'), name, price, category, popular };
         state.products.unshift(product);
 
         if (dbReady) {
@@ -1860,11 +1644,7 @@
     }
 
     async function clearHistory() {
-      if (!state.history.length) {
-        toast('История уже пустая');
-        return;
-      }
-
+      if (!state.history.length) return toast('История уже пустая');
       if (!confirm('Удалить всю историю?')) return;
 
       state.history = [];
